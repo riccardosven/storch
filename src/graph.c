@@ -1,39 +1,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "graph.h"
+#include "ops.h"
 #include "scorch/scorch.h"
-
-typedef enum
-{
-  PARAMETER,
-  NONE,
-  VALUE,
-  SUM,
-  PRODUCT,
-  DIFFERENCE,
-  DIVISION,
-  EXPONENTIAL,
-  POWER,
-  MINUS,
-  N_OPS
-} Op;
-
-struct graphnode_s
-{
-  Tensor t;
-  Tensor g;
-  bool requires_grad;
-  Op op;
-  size_t arity;
-  struct graphnode_s** operands;
-};
-
-struct graph_ctx_s
-{
-  GraphNode** arena;
-  size_t len;
-  size_t cap;
-};
 
 GRAPH_CTX
 G_CTX_New()
@@ -72,6 +42,8 @@ G_New(GRAPH_CTX ctx, Op op, size_t arity)
   v->op = op;
   v->arity = arity;
   v->operands = malloc(sizeof(GraphNode*) * arity);
+  v->forward_f = NULL;
+  v->backward_f = NULL;
   return v;
 }
 
@@ -108,6 +80,8 @@ G_Product(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 
   v->operands[0] = x;
   v->operands[1] = y;
+  v->forward_f = G_Product_Forward;
+  v->backward_f = G_Product_Backward;
 
   return v;
 }
@@ -119,7 +93,6 @@ G_Value(GRAPH_CTX ctx, const Tensor x)
   GraphNode* v = G_New(ctx, VALUE, 0);
 
   v->t = x;
-
   return v;
 }
 
@@ -141,6 +114,8 @@ G_Sum(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 
   v->operands[0] = x;
   v->operands[1] = y;
+  v->forward_f = G_Sum_Forward;
+  v->backward_f = G_Sum_Backward;
 
   return v;
 }
@@ -153,6 +128,8 @@ G_Diff(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 
   v->operands[0] = x;
   v->operands[1] = y;
+  v->forward_f = G_Diff_Forward;
+  v->backward_f = G_Diff_Backward;
 
   return v;
 }
@@ -164,6 +141,8 @@ G_Div(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 
   v->operands[0] = x;
   v->operands[1] = y;
+  v->forward_f = G_Div_Forward;
+  v->backward_f = G_Div_Backward;
 
   return v;
 }
@@ -174,6 +153,8 @@ G_Exp(GRAPH_CTX ctx, GraphNode* const x)
   GraphNode* v = G_New(ctx, EXPONENTIAL, 1);
 
   v->operands[0] = x;
+  v->forward_f = G_Exp_Forward;
+  v->backward_f = G_Exp_Backward;
 
   return v;
 }
@@ -186,6 +167,9 @@ G_Pow(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
   v->operands[0] = x;
   v->operands[1] = y;
 
+  v->forward_f = G_Pow_Forward;
+  v->backward_f = G_Pow_Backward;
+
   return v;
 }
 
@@ -194,5 +178,8 @@ G_Minus(GRAPH_CTX ctx, GraphNode* const x)
 {
   GraphNode* v = G_New(ctx, MINUS, 1);
   v->operands[0] = x;
+  v->forward_f = G_Minus_Forward;
+  v->backward_f = G_Minus_Backward;
+
   return v;
 }

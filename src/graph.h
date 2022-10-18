@@ -16,6 +16,8 @@ struct graphnode_s
   Op op;
   size_t arity;
   struct graphnode_s** operands;
+  void (*forward_f)(struct graphnode_s*);
+  void (*backward_f)(struct graphnode_s*);
 };
 
 struct graph_ctx_s
