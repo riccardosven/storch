@@ -41,6 +41,9 @@ Tensor*
 T_Full(SCORCH_CTX, size_t n, size_t m, T_eltype);
 
 Tensor*
+T_FullLike(SCORCH_CTX, Tensor*, T_eltype);
+
+Tensor*
 T_Copy(SCORCH_CTX, Tensor*);
 
 void

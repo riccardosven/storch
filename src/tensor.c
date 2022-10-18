@@ -43,6 +43,12 @@ T_Full(SCORCH_CTX ctx, size_t n, size_t m, T_eltype a)
 }
 
 Tensor*
+T_FullLike(SCORCH_CTX ctx, Tensor* t, T_eltype a)
+{
+  return T_Full(ctx, t->n, t->m, a);
+}
+
+Tensor*
 T_Ones(SCORCH_CTX ctx, size_t n, size_t m)
 {
   return T_Full(ctx, n, m, 1.0);
