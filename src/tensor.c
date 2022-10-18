@@ -34,12 +34,24 @@ T_New(SCORCH_CTX ctx, size_t n, size_t m)
 }
 
 Tensor*
-T_Zeros(SCORCH_CTX ctx, size_t n, size_t m)
+T_Full(SCORCH_CTX ctx, size_t n, size_t m, T_eltype a)
 {
   Tensor* t = T_New(ctx, n, m);
   for (size_t i = 0; i < nelems(t); i++)
-    t->data[i] = 0.0;
+    t->data[i] = a;
   return t;
+}
+
+Tensor*
+T_Ones(SCORCH_CTX ctx, size_t n, size_t m)
+{
+  return T_Full(ctx, n, m, 1.0);
+}
+
+Tensor*
+T_Zeros(SCORCH_CTX ctx, size_t n, size_t m)
+{
+  return T_Full(ctx, n, m, 0.0);
 }
 
 Tensor*
@@ -48,14 +60,6 @@ T_ZerosLike(SCORCH_CTX ctx, Tensor* t)
   return T_Zeros(ctx, t->n, t->m);
 }
 
-Tensor*
-T_Ones(SCORCH_CTX ctx, size_t n, size_t m)
-{
-  Tensor* t = T_New(ctx, n, m);
-  for (size_t i = 0; i < nelems(t); i++)
-    t->data[i] = 1.0;
-  return t;
-}
 
 Tensor*
 T_OnesLike(SCORCH_CTX ctx, Tensor* t)
@@ -66,9 +70,7 @@ T_OnesLike(SCORCH_CTX ctx, Tensor* t)
 Tensor*
 T_Scalar(SCORCH_CTX ctx, T_eltype a)
 {
-  Tensor* t = T_New(ctx, 1, 1);
-  t->data[0] = a;
-  return t;
+  return T_Full(ctx, 1, 1, a);
 }
 
 void*

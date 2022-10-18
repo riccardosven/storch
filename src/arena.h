@@ -18,5 +18,4 @@ G_Malloc(SCORCH_CTX ctx);
 Tensor*
 T_Malloc(SCORCH_CTX ctx);
 
-
 #endif // SCORCH_ARENA_H

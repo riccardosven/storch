@@ -1,9 +1,9 @@
 #ifndef SCORCH_TENSOR_H
 #define SCORCH_TENSOR_H
 
+#include "scorch/scorch.h"
 #include <stdbool.h>
 #include <stddef.h>
-#include "scorch/scorch.h"
 
 typedef double T_eltype;
 
@@ -23,9 +23,11 @@ Tensor* T_Zeros(SCORCH_CTX, size_t, size_t);
 
 Tensor* T_Ones(SCORCH_CTX, size_t, size_t);
 
-Tensor* T_ZerosLike(SCORCH_CTX, Tensor*);
+Tensor*
+T_ZerosLike(SCORCH_CTX, Tensor*);
 
-Tensor* T_OnesLike(SCORCH_CTX, Tensor*);
+Tensor*
+T_OnesLike(SCORCH_CTX, Tensor*);
 
 void*
 T_Destroy(Tensor* t);
@@ -34,6 +36,9 @@ Tensor*
 T_Wrap(SCORCH_CTX, size_t n, size_t m, T_eltype[]);
 
 Tensor* T_Scalar(SCORCH_CTX, T_eltype);
+
+Tensor*
+T_Full(SCORCH_CTX, size_t n, size_t m, T_eltype);
 
 Tensor*
 T_Copy(SCORCH_CTX, Tensor*);
@@ -102,7 +107,7 @@ void
 T_Exp_(Tensor*, Tensor*);
 
 Tensor*
-T_Log(SCORCH_CTX,Tensor*);
+T_Log(SCORCH_CTX, Tensor*);
 
 void
 T_Log_(Tensor*, Tensor*);

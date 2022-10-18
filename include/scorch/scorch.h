@@ -44,7 +44,7 @@ GraphNode*
 G_Minus(SCORCH_CTX ctx, GraphNode* const x);
 
 GraphNode*
-G_MatMul(SCORCH_CTX ctx, GraphNode* const x ,GraphNode* const y);
+G_MatMul(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
 
 /* GRAPH AND GRADIENT EVALUATION */
 void
