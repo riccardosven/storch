@@ -12,5 +12,3 @@ foreach(TESTFILE ${TESTFILES})
 
 endforeach()
 
-set_property(TEST backward_G_Value
-    PROPERTY WILL_FAIL TRUE)
