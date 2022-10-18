@@ -161,6 +161,24 @@ G_Pow_Backward(GraphNode* x)
 }
 
 void
+G_Log_Forward(GraphNode* x)
+{
+  assert(x->op == LOG);
+  assert(x->arity == 1);
+  x->t = T_Log(x->ctx, value(x->operands[0]));
+}
+
+void
+G_Log_Backward(GraphNode* x)
+{
+  assert(x->op == LOG);
+  assert(x->arity == 1);
+  Tensor* t = T_Div(NULL, grad(x), value(x->operands[0]));
+  T_Add_(grad(x->operands[0]), t);
+  T_Destroy(t);
+}
+
+void
 G_Minus_Forward(GraphNode* x)
 {
   assert(x->op == MINUS);

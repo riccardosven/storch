@@ -35,6 +35,9 @@ GraphNode*
 G_Exp(SCORCH_CTX ctx, GraphNode* const x);
 
 GraphNode*
+G_Log(SCORCH_CTX ctx, GraphNode* const x);
+
+GraphNode*
 G_Pow(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
 
 GraphNode*

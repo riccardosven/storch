@@ -122,6 +122,18 @@ G_Exp(SCORCH_CTX ctx, GraphNode* const x)
 }
 
 GraphNode*
+G_Log(SCORCH_CTX ctx, GraphNode* const x)
+{
+  GraphNode* v = G_New(ctx, LOG, 1);
+
+  v->operands[0] = x;
+  v->forward_f = G_Log_Forward;
+  v->backward_f = G_Log_Backward;
+
+  return v;
+}
+
+GraphNode*
 G_Pow(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
   GraphNode* v = G_New(ctx, POWER, 2);

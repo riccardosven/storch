@@ -8,6 +8,7 @@ typedef enum
   DIFFERENCE,
   DIVISION,
   EXPONENTIAL,
+  LOG,
   MATMUL,
   MINUS,
   NONE,
@@ -36,6 +37,12 @@ G_Exp_Forward(GraphNode* x);
 
 void
 G_Exp_Backward(GraphNode* x);
+
+void
+G_Log_Forward(GraphNode* x);
+
+void
+G_Log_Backward(GraphNode* x);
 
 void
 G_MatMul_Forward(GraphNode* x);
