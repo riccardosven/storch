@@ -10,8 +10,8 @@
 
 struct graphnode_s
 {
-  Tensor t;
-  Tensor g;
+  Tensor* t;
+  Tensor* g;
   bool requires_grad;
   Op op;
   size_t arity;

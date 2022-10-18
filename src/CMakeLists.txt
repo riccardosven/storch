@@ -1,10 +1,10 @@
 set(HEADER_LIST "${Scorch_SOURCE_DIR}/include/scorch/scorch.h")
 
-add_library(scorch ops.c graph.c scorch.c ${HEADER_LIST})
+add_library(scorch tensor.c ops.c graph.c scorch.c ${HEADER_LIST})
 
 target_include_directories(scorch PUBLIC ../include)
 
-target_link_libraries(scorch PRIVATE m)
+target_link_libraries(scorch PRIVATE m blas)
 
 source_group(
     TREE "${PROJECT_SOURCE_DIR}/include"

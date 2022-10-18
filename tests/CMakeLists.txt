@@ -9,6 +9,8 @@ foreach(TESTFILE ${TESTFILES})
     target_link_libraries(${TESTEXEC} PRIVATE scorch m)
 
     add_test(NAME ${TESTEXEC} COMMAND ${TESTEXEC})
+    # add_test(NAME ${TESTEXEC}_memcheck COMMAND valgrind ./${TESTEXEC})
+    # set_tests_properties(${TESTEXEC}_memcheck PROPERTIES LABELS memcheck)
 
 endforeach()
 

@@ -1,22 +1,23 @@
-#include "scorch/scorch.h"
 #include "common.h"
+#include "scorch/scorch.h"
 
-int main(void)
+int
+main(void)
 {
   GRAPH_CTX ctx = G_CTX_New();
 
-  GraphNode* a = G_Parameter(ctx, 5);
-  GraphNode* b = G_Parameter(ctx, 3);
+  Tensor* t = T_Scalar(5);
 
-  GraphNode* g = G_Product(ctx, a, b);
+  GraphNode* g = G_Parameter(ctx, t);
 
   forward(g);
   backward(g);
 
-  int retval = check_almost_eq(grad(a), 3);
-  retval = check_almost_eq(grad(b), 5);
+  int retval = check_almost_eq(value(g)->data[0], 5);
+  retval += check_almost_eq(grad(g)->data[0], 1);
 
   G_CTX_Destroy(ctx);
+  T_Destroy(t);
 
   return retval;
 }

@@ -36,8 +36,8 @@ G_New(GRAPH_CTX ctx, Op op, size_t arity)
 {
   GraphNode* v = G_Malloc(ctx);
 
-  v->t = 0.0;
-  v->g = 0.0;
+  v->t = NULL;
+  v->g = NULL;
   v->requires_grad = false;
   v->op = op;
   v->arity = arity;
@@ -87,7 +87,7 @@ G_Product(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 }
 
 GraphNode*
-G_Value(GRAPH_CTX ctx, const Tensor x)
+G_Value(GRAPH_CTX ctx, Tensor* x)
 {
 
   GraphNode* v = G_New(ctx, VALUE, 0);
@@ -97,7 +97,7 @@ G_Value(GRAPH_CTX ctx, const Tensor x)
 }
 
 GraphNode*
-G_Parameter(GRAPH_CTX ctx, const Tensor x)
+G_Parameter(GRAPH_CTX ctx, Tensor* x)
 {
   GraphNode* v = G_New(ctx, PARAMETER, 0);
   v->t = x;

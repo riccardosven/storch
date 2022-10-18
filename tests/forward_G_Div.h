@@ -1,7 +1,8 @@
-#include "scorch/scorch.h"
 #include "common.h"
+#include "scorch/scorch.h"
 
-int main(void)
+int
+main(void)
 {
   GRAPH_CTX ctx = G_CTX_New();
 
@@ -15,4 +16,3 @@ int main(void)
 
   return retval;
 }
-
