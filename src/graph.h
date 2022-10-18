@@ -4,10 +4,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "scorch/tensor.h"
-#include "scorch/scorch.h"
 #include "ops.h"
-
+#include "scorch/scorch.h"
+#include "scorch/tensor.h"
 
 struct graphnode_s
 {
@@ -19,13 +18,11 @@ struct graphnode_s
   struct graphnode_s** operands;
 };
 
-
 struct graph_ctx_s
 {
   GraphNode** arena;
   size_t len;
   size_t cap;
 };
-
 
 #endif // SCORCH_GRAPH_H

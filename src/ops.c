@@ -1,8 +1,8 @@
 #include <assert.h>
 #include <tgmath.h>
 
-#include "ops.h"
 #include "graph.h"
+#include "ops.h"
 #include "scorch/scorch.h"
 
 void

@@ -1,11 +1,11 @@
 #include "scorch/scorch.h"
-#include "scorch/tensor.h"
 #include "graph.h"
 #include "ops.h"
+#include "scorch/tensor.h"
 
 #include <assert.h>
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 void
 forward(GraphNode* const x)

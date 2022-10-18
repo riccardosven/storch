@@ -1,4 +1,3 @@
-
 set(HEADER_LIST "${Scorch_SOURCE_DIR}/include/scorch/scorch.h")
 
 add_library(scorch ops.c graph.c scorch.c ${HEADER_LIST})
@@ -12,3 +11,10 @@ source_group(
     PREFIX "Header Files"
     FILES ${HEADER_LIST})
 
+clangformat_setup(
+    graph.c
+    graph.h
+    ops.c
+    ops.h
+    scorch.c
+    )

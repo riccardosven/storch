@@ -3,7 +3,6 @@
 
 #include "scorch/scorch.h"
 
-
 typedef enum
 {
   PARAMETER,
@@ -19,7 +18,6 @@ typedef enum
   N_OPS
 } Op;
 
-
 struct graphnode_s
 {
   Tensor t;
@@ -30,14 +28,12 @@ struct graphnode_s
   struct graphnode_s** operands;
 };
 
-
 struct graph_ctx_s
 {
   GraphNode** arena;
   size_t len;
   size_t cap;
 };
-
 
 GRAPH_CTX
 G_CTX_New()
@@ -105,7 +101,7 @@ G_CTX_Destroy(GRAPH_CTX ctx)
 }
 
 GraphNode*
-G_Product(GRAPH_CTX ctx, GraphNode* const  x, GraphNode* const  y)
+G_Product(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
 
   GraphNode* v = G_New(ctx, PRODUCT, 2);
