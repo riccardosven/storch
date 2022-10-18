@@ -6,7 +6,7 @@
 int
 main(void)
 {
-  Tensor* t = T_Zeros(12, 14);
+  Tensor* t = T_Zeros(NULL, 12, 14);
 
   int retval = t->n == 12 && t->m == 14 && t->data != NULL;
 

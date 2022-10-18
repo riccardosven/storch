@@ -7,7 +7,7 @@ int
 main(void)
 {
 
-  Tensor* t = T_Scalar(1.234);
+  Tensor* t = T_Scalar(NULL, 1.234);
 
   int retval = almost_eq(t->data[0], 1.234) && t->n == 1 && t->m == 1;
 

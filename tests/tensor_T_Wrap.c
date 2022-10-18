@@ -9,7 +9,7 @@ main(void)
 
   T_eltype d[] = { 1, 2, 3, 4, 5, 6 };
 
-  Tensor* t = T_Wrap(3, 2, d);
+  Tensor* t = T_Wrap(NULL,3, 2, d);
 
   int retval = 1;
 

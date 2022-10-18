@@ -1,6 +1,7 @@
 #include "common.h"
 #include <stdlib.h>
 #include "scorch/scorch.h"
+#include "scorch/tensor.h"
 
 int
 main(void)
@@ -11,13 +12,13 @@ main(void)
    *     [-3, 6]
    */
 
-  GRAPH_CTX ctx = G_CTX_New();
+  SCORCH_CTX ctx = SCORCH_CTX_New();
 
   T_eltype v_a[] = {1,-2,-3,4,-5,6};
   T_eltype v_b[] = {0.1, 0.2, 0.3, 0.4};
 
-  Tensor* t_a = T_Wrap(3, 2, v_a);
-  Tensor* t_b = T_Wrap(2, 2, v_b);
+  Tensor* t_a = T_Wrap(ctx, 3, 2, v_a);
+  Tensor* t_b = T_Wrap(ctx, 2, 2, v_b);
 
   GraphNode* g = G_MatMul(ctx, G_Value(ctx, t_a), G_Value(ctx, t_b));
 
@@ -36,9 +37,7 @@ main(void)
     retval = retval && almost_eq(value(g)->data[i], v_ab[i]);
   }
 
-  G_CTX_Destroy(ctx);
-  T_Destroy(t_a);
-  T_Destroy(t_b);
+  SCORCH_CTX_Destroy(ctx);
 
   return retval ? EXIT_SUCCESS : EXIT_FAILURE;
 }

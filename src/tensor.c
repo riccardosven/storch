@@ -1,6 +1,7 @@
 #include "scorch/tensor.h"
 #include "scorch/scorch.h"
 #include <assert.h>
+#include "arena.h"
 #include <cblas.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -22,9 +23,9 @@ isscalar(Tensor* t)
 }
 
 Tensor*
-T_New(size_t n, size_t m)
+T_New(SCORCH_CTX ctx, size_t n, size_t m)
 {
-  Tensor* t = malloc(sizeof (Tensor));
+  Tensor* t = T_Malloc(ctx);
   t->n = n;
   t->m = m;
   t->data = malloc(sizeof(T_eltype) * n * m);
@@ -33,39 +34,39 @@ T_New(size_t n, size_t m)
 }
 
 Tensor*
-T_Zeros(size_t n, size_t m)
+T_Zeros(SCORCH_CTX ctx, size_t n, size_t m)
 {
-  Tensor* t = T_New(n, m);
+  Tensor* t = T_New(ctx, n, m);
   for (size_t i = 0; i < nelems(t); i++)
     t->data[i] = 0.0;
   return t;
 }
 
 Tensor*
-T_ZerosLike(Tensor* t)
+T_ZerosLike(SCORCH_CTX ctx, Tensor* t)
 {
-  return T_Zeros(t->n, t->m);
+  return T_Zeros(ctx, t->n, t->m);
 }
 
 Tensor*
-T_Ones(size_t n, size_t m)
+T_Ones(SCORCH_CTX ctx, size_t n, size_t m)
 {
-  Tensor* t = T_New(n, m);
+  Tensor* t = T_New(ctx, n, m);
   for (size_t i = 0; i < nelems(t); i++)
     t->data[i] = 1.0;
   return t;
 }
 
 Tensor*
-T_OnesLike(Tensor* t)
+T_OnesLike(SCORCH_CTX ctx, Tensor* t)
 {
-  return T_Ones(t->n, t->m);
+  return T_Ones(ctx, t->n, t->m);
 }
 
 Tensor*
-T_Scalar(T_eltype a)
+T_Scalar(SCORCH_CTX ctx, T_eltype a)
 {
-  Tensor* t = T_New(1, 1);
+  Tensor* t = T_New(ctx, 1, 1);
   t->data[0] = a;
   return t;
 }
@@ -80,9 +81,9 @@ T_Destroy(Tensor* t)
 }
 
 Tensor*
-T_Wrap(size_t n, size_t m, T_eltype s[static n * m])
+T_Wrap(SCORCH_CTX ctx, size_t n, size_t m, T_eltype s[static n * m])
 {
-  Tensor* t = T_New(n, m);
+  Tensor* t = T_New(ctx, n, m);
   for (size_t i = 0; i < n*m; i++)
     t->data[i] = s[i];
 
@@ -98,9 +99,9 @@ T_Copy_(Tensor* t, Tensor* a)
 }
 
 Tensor*
-T_Copy(Tensor* a)
+T_Copy(SCORCH_CTX ctx, Tensor* a)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
   T_Copy_(t, a);
   return t;
 }
@@ -121,9 +122,9 @@ T_SetItem(Tensor* t, size_t i, size_t j, T_eltype d)
 }
 
 Tensor*
-T_Sum(Tensor* a, Tensor* b)
+T_Sum(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
 
   T_Sum_(t, a, b);
 
@@ -155,9 +156,9 @@ T_Diff_(Tensor* t, Tensor* a, Tensor* b)
 }
 
 Tensor*
-T_Diff(Tensor* a, Tensor* b)
+T_Diff(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
   T_Diff_(t, a, b);
   return t;
 }
@@ -178,9 +179,9 @@ T_Mul_(Tensor* t, Tensor* a, Tensor* b)
 }
 
 Tensor*
-T_Mul(Tensor* a, Tensor* b)
+T_Mul(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
   T_Mul_(t, a, b);
   return t;
 }
@@ -194,9 +195,9 @@ T_Div_(Tensor* t, Tensor* a, Tensor* b)
 }
 
 Tensor*
-T_Div(Tensor* a, Tensor* b)
+T_Div(SCORCH_CTX ctx ,Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
   T_Div_(t, a, b);
   return t;
 }
@@ -210,9 +211,9 @@ T_Scale_(Tensor* t, T_eltype a, Tensor* b)
 }
 
 Tensor*
-T_Scale(T_eltype a, Tensor* b)
+T_Scale(SCORCH_CTX ctx, T_eltype a, Tensor* b)
 {
-  Tensor* t = T_New(b->n, b->m);
+  Tensor* t = T_New(ctx, b->n, b->m);
   T_Scale_(t, a, b);
   return t;
 }
@@ -226,9 +227,9 @@ T_SPow_(Tensor* t, Tensor* a, T_eltype b)
 }
 
 Tensor*
-T_SPow(Tensor* a, T_eltype b)
+T_SPow(SCORCH_CTX ctx, Tensor* a, T_eltype b)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
   T_SPow_(t, a, b);
 
   return t;
@@ -243,9 +244,9 @@ T_Pow_(Tensor* t, Tensor* a, Tensor* b)
 }
 
 Tensor*
-T_Pow(Tensor* a, Tensor* b)
+T_Pow(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
   T_Pow_(t, a, b);
   return t;
 }
@@ -258,9 +259,9 @@ T_Minus_(Tensor* t, Tensor* a)
 }
 
 Tensor*
-T_Minus(Tensor* a)
+T_Minus(SCORCH_CTX ctx ,Tensor* a)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
   T_Minus_(t, a);
   return t;
 }
@@ -274,9 +275,9 @@ T_Exp_(Tensor* t, Tensor* a)
 }
 
 Tensor*
-T_Exp(Tensor* a)
+T_Exp(SCORCH_CTX ctx, Tensor* a)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
   T_Exp_(t, a);
   return t;
 }
@@ -290,9 +291,9 @@ T_Log_(Tensor* t, Tensor* a)
 }
 
 Tensor*
-T_Log(Tensor* a)
+T_Log(SCORCH_CTX ctx, Tensor* a)
 {
-  Tensor* t = T_New(a->n, a->m);
+  Tensor* t = T_New(ctx, a->n, a->m);
   T_Log_(t, a);
   return t;
 }
@@ -321,11 +322,11 @@ T_GEMM_(Tensor* t, Tensor* a, bool Ta, Tensor* b, bool Tb, T_eltype alpha, T_elt
 
 
 Tensor*
-T_MatMul(Tensor *a, Tensor*b)
+T_MatMul(SCORCH_CTX ctx, Tensor *a, Tensor*b)
 {
   assert(a->m == b->n);
 
-  Tensor* t = T_New(a->n, b->m);
+  Tensor* t = T_New(ctx, a->n, b->m);
 
   T_MatMul_(t, a, b);
 

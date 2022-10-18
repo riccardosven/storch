@@ -33,12 +33,12 @@ backward_impl(GraphNode* const x)
   assert(x->requires_grad);
 
   if (!x->g)
-    x->g = T_ZerosLike(x->t);
+    x->g = T_ZerosLike(x->ctx, x->t);
 
   for (size_t i = 0; i < x->arity; i++)
     if (!x->operands[i]->g) {
 
-      x->operands[i]->g = T_ZerosLike(x->operands[i]->t);
+      x->operands[i]->g = T_ZerosLike(x->ctx, x->operands[i]->t);
     }
 
   if (x->backward_f)
@@ -53,7 +53,7 @@ backward_impl(GraphNode* const x)
 void
 backward(GraphNode* const x)
 {
-  x->g = T_OnesLike(x->t);
+  x->g = T_OnesLike(x->ctx, x->t);
   backward_impl(x);
 }
 

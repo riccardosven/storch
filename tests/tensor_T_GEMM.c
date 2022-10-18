@@ -13,13 +13,13 @@
 int test_AB(void)
 {
   T_eltype va[] = { 1, 2, 3, 4, 5, 6 };
-  Tensor* a = T_Wrap(2, 3, va);
+  Tensor* a = T_Wrap(NULL,2, 3, va);
 
   T_eltype vb[] = { 3, 2, 0, 7, -3, -2 };
-  Tensor* b = T_Wrap(3, 2, vb);
+  Tensor* b = T_Wrap(NULL,3, 2, vb);
 
   T_eltype vc[] = { 1, 2, 3, 4 };
-  Tensor* c = T_Wrap(2, 2, vc);
+  Tensor* c = T_Wrap(NULL,2, 2, vc);
 
   T_eltype alpha = 1.2;
   T_eltype beta = -0.3;
@@ -54,11 +54,11 @@ int
 test_ATB(void)
 {
   T_eltype va[] = {1, 3, 5};
-  Tensor *a = T_Wrap(3, 1, va);
+  Tensor *a = T_Wrap(NULL,3, 1, va);
   T_eltype vb[] = {5,2,1, 1,-2, 5};
-  Tensor *b = T_Wrap(3,2, vb);
+  Tensor *b = T_Wrap(NULL,3,2, vb);
 
-  Tensor *c = T_Zeros(1, 2);
+  Tensor *c = T_Zeros(NULL, 1, 2);
 
   T_GEMM_(c, a, true, b, false, 1.0, 0.0);
 
@@ -77,15 +77,15 @@ test_ABT(void)
 {
   // A 2 x 3
   T_eltype va[] = {1., 2., 3., 4.,5., 6.};
-  Tensor *a = T_Wrap(2, 3, va );
+  Tensor *a = T_Wrap(NULL,2, 3, va );
 
   // B 2 x 3
   T_eltype vb[] = {3., -3., .5, .7, .8, .9};
-  Tensor *b = T_Wrap(2, 3 ,vb);
+  Tensor *b = T_Wrap(NULL,2, 3 ,vb);
 
   // C 2 x 2
   T_eltype vc[] = {0., 0., 0., 0.};
-  Tensor *c = T_Wrap(2, 2, vc);
+  Tensor *c = T_Wrap(NULL,2, 2, vc);
 
   T_GEMM_(c, a, false, b, true, 1.0, 0.0);
 

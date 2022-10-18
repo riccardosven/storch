@@ -8,11 +8,11 @@ main(void)
 {
   T_eltype v[] = { 1, 2, 3, 4, 5, 6 };
 
-  Tensor* t = T_Wrap(3, 2, v);
-  Tensor* o = T_OnesLike(t);
+  Tensor* t = T_Wrap(NULL,3, 2, v);
+  Tensor* o = T_OnesLike(NULL, t);
 
   // s = t - 1
-  Tensor* s = T_Diff(t, o);
+  Tensor* s = T_Diff(NULL, t, o);
 
   int retval = s->data != t->data && s->data != o->data;
 
@@ -35,7 +35,7 @@ main(void)
   }
 
   // r = -t
-  Tensor* r = T_Minus(t);
+  Tensor* r = T_Minus(NULL, t);
   for (size_t i = 0; i < nelems(t); i++) {
     retval = retval && (r->data[i] == -t->data[i]);
   }

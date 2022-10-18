@@ -2,7 +2,6 @@
 #define SCORCH_GRAPH_H
 
 #include <stdbool.h>
-#include <stdlib.h>
 
 #include "ops.h"
 #include "scorch/scorch.h"
@@ -18,13 +17,10 @@ struct graphnode_s
   struct graphnode_s** operands;
   void (*forward_f)(struct graphnode_s*);
   void (*backward_f)(struct graphnode_s*);
+  SCORCH_CTX ctx;
 };
 
-struct graph_ctx_s
-{
-  GraphNode** arena;
-  size_t len;
-  size_t cap;
-};
+void*
+G_Destroy(GraphNode*);
 
 #endif // SCORCH_GRAPH_H

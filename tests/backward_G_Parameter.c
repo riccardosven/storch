@@ -1,12 +1,13 @@
 #include "common.h"
 #include "scorch/scorch.h"
+#include "scorch/tensor.h"
 
 int
 main(void)
 {
-  GRAPH_CTX ctx = G_CTX_New();
+  SCORCH_CTX ctx = SCORCH_CTX_New();
 
-  Tensor* t = T_Scalar(5);
+  Tensor* t = T_Scalar(ctx, 5);
 
   GraphNode* g = G_Parameter(ctx, t);
 
@@ -16,8 +17,7 @@ main(void)
   int retval = check_almost_eq(value(g)->data[0], 5);
   retval += check_almost_eq(grad(g)->data[0], 1);
 
-  G_CTX_Destroy(ctx);
-  T_Destroy(t);
+  SCORCH_CTX_Destroy(ctx);
 
   return retval;
 }

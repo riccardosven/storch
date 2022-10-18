@@ -5,17 +5,15 @@
 int
 main(void)
 {
-  GRAPH_CTX ctx = G_CTX_New();
-  Tensor* t = T_Scalar(2);
+  SCORCH_CTX ctx = SCORCH_CTX_New();
 
-  GraphNode* g = G_Value(ctx, t);
+  GraphNode* g = G_Value(ctx, T_Scalar(ctx, 2));
 
   forward(g);
 
   int retval = check_almost_eq(value(g)->data[0], 2);
 
-  T_Destroy(t);
-  G_CTX_Destroy(ctx);
+  SCORCH_CTX_Destroy(ctx);
 
   return retval;
 }

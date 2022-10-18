@@ -1,47 +1,47 @@
 #ifndef SCORCH_H
 #define SCORCH_H
 
-#include "scorch/tensor.h"
-
-typedef struct graph_ctx_s* GRAPH_CTX;
+typedef struct scorch_ctx_s* SCORCH_CTX;
 typedef struct graphnode_s GraphNode;
+typedef struct scorch_tensor_s Tensor;
 
 /* GRAPH CONTEXT AND ARENA ALLOCATOR */
-GRAPH_CTX
-G_CTX_New();
+SCORCH_CTX
+SCORCH_CTX_New();
+
 void*
-G_CTX_Destroy(GRAPH_CTX ctx);
+SCORCH_CTX_Destroy(SCORCH_CTX ctx);
 
 /* GRAPH TRANSFORMATION FUNCTIONS */
 GraphNode*
-G_Product(const GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y);
+G_Product(const SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
 
 GraphNode*
-G_Value(const GRAPH_CTX ctx, Tensor* x);
+G_Value(const SCORCH_CTX ctx, Tensor* x);
 
 GraphNode*
-G_Parameter(const GRAPH_CTX ctx, Tensor* x);
+G_Parameter(const SCORCH_CTX ctx, Tensor* x);
 
 GraphNode*
-G_Sum(const GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y);
+G_Sum(const SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
 
 GraphNode*
-G_Diff(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y);
+G_Diff(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
 
 GraphNode*
-G_Div(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y);
+G_Div(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
 
 GraphNode*
-G_Exp(GRAPH_CTX ctx, GraphNode* const x);
+G_Exp(SCORCH_CTX ctx, GraphNode* const x);
 
 GraphNode*
-G_Pow(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y);
+G_Pow(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
 
 GraphNode*
-G_Minus(GRAPH_CTX ctx, GraphNode* const x);
+G_Minus(SCORCH_CTX ctx, GraphNode* const x);
 
 GraphNode*
-G_MatMul(GRAPH_CTX ctx, GraphNode* const x ,GraphNode* const y);
+G_MatMul(SCORCH_CTX ctx, GraphNode* const x ,GraphNode* const y);
 
 /* GRAPH AND GRADIENT EVALUATION */
 void
@@ -51,6 +51,7 @@ backward(GraphNode* const x);
 
 Tensor*
 value(const GraphNode* const x);
+
 Tensor*
 grad(const GraphNode* const x);
 

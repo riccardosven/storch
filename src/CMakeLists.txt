@@ -1,6 +1,6 @@
 set(HEADER_LIST "${Scorch_SOURCE_DIR}/include/scorch/scorch.h")
 
-add_library(scorch tensor.c ops.c graph.c scorch.c ${HEADER_LIST})
+add_library(scorch tensor.c arena.c ops.c graph.c scorch.c ${HEADER_LIST})
 
 target_include_directories(scorch PUBLIC ../include)
 

@@ -14,7 +14,7 @@ main(void)
    *     [1.1, 0.9]
    */
 
-  Tensor* t = T_Zeros(3, 2);
+  Tensor* t = T_Zeros(NULL, 3, 2);
 
   T_SetItem(t, 1, 0, 0.7);
   T_SetItem(t, 2, 0, 1.1);
