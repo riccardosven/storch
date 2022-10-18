@@ -6,13 +6,17 @@ typedef double Tensor;
 #include "graph.h"
 #include "operations.h"
 #include <assert.h>
+#include <stdbool.h>
 
 void
 forward(GraphNode* x)
 {
 
-  for (size_t i = 0; i < x->arity; i++)
+  for (size_t i = 0; i < x->arity; i++) {
     forward(x->operands[i]);
+    if (x->operands[i]->requires_grad)
+      x->requires_grad = true;
+  }
 
   switch (x->op) {
     case VALUE:
@@ -82,7 +86,9 @@ backward_impl(GraphNode* x)
       assert(0);
   }
   for (size_t i = 0; i < x->arity; i++)
-    backward_impl(x->operands[i]);
+    if (x->operands[i]->requires_grad) {
+      backward_impl(x->operands[i]);
+    }
 }
 
 void

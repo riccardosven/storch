@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 typedef enum
@@ -21,6 +22,7 @@ typedef struct node
 {
   Tensor t;
   Tensor g;
+  bool requires_grad;
   Op op;
   size_t arity;
   struct node** operands;
@@ -71,6 +73,7 @@ G_New(GRAPH_CTX ctx, Op op, size_t arity)
 
   v->t = 0.0;
   v->g = 0.0;
+  v->requires_grad = false;
   v->op = op;
   v->arity = arity;
   v->operands = malloc(sizeof(GraphNode*) * arity);
@@ -121,6 +124,15 @@ G_Value(GRAPH_CTX ctx, Tensor x)
   GraphNode* v = G_New(ctx, VALUE, 0);
 
   v->t = x;
+
+  return v;
+}
+
+GraphNode*
+G_Parameter(GRAPH_CTX ctx, Tensor x)
+{
+  GraphNode* v = G_Value(ctx, x);
+  v->requires_grad = true;
 
   return v;
 }

@@ -13,15 +13,15 @@ START_TEST(integration_1)
   Tensor x_v = 1.51;
   Tensor y_v = 2.192;
 
-  GraphNode* x = G_Value(ctx, x_v);
-  GraphNode* y = G_Value(ctx, y_v);
+  GraphNode* x = G_Parameter(ctx, x_v);
+  GraphNode* y = G_Parameter(ctx, y_v);
 
   GraphNode* g =
     G_Sum(ctx,
           G_Sum(ctx,
-                G_Product(ctx, G_Pow(ctx, x, G_Value(ctx, 2)), y),
-                G_Product(ctx, G_Product(ctx, x, y), G_Value(ctx, 15))),
-          G_Div(ctx, G_Value(ctx, 3), x));
+                G_Product(ctx, G_Pow(ctx, x, G_Parameter(ctx, 2)), y),
+                G_Product(ctx, G_Product(ctx, x, y), G_Parameter(ctx, 15))),
+          G_Div(ctx, G_Parameter(ctx, 3), x));
 
   forward(g);
   backward(g);
@@ -40,12 +40,12 @@ START_TEST(integration_2)
 
   Tensor x_v = 0.84;
 
-  GraphNode* x = G_Value(ctx, x_v);
+  GraphNode* x = G_Parameter(ctx, x_v);
 
   GraphNode* g =
     G_Div(ctx,
-          G_Value(ctx, 1),
-          G_Sum(ctx, G_Value(ctx, 1), G_Exp(ctx, G_Minus(ctx, x))));
+          G_Parameter(ctx, 1),
+          G_Sum(ctx, G_Parameter(ctx, 1), G_Exp(ctx, G_Minus(ctx, x))));
 
   forward(g);
   backward(g);
