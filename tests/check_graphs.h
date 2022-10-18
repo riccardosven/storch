@@ -59,6 +59,42 @@ START_TEST(integration_2)
 }
 END_TEST
 
+START_TEST(integration_3)
+{
+
+  /* g = a * (x + b * c) */
+  GRAPH_CTX ctx = G_CTX_New();
+
+  Tensor x_v = 0.88;
+  Tensor a_v = 4;
+  Tensor b_v = 5;
+  Tensor c_v = 3;
+
+  GraphNode* x = G_Parameter(ctx, x_v);
+  GraphNode* a = G_Value(ctx, a_v);
+  GraphNode* b = G_Value(ctx, b_v);
+  GraphNode* c = G_Value(ctx, c_v);
+  GraphNode* y1 = G_Product(ctx, b, c);
+  GraphNode* y2 = G_Sum(ctx, x, y1);
+  GraphNode* g = G_Product(ctx, a, y2);
+
+  forward(g);
+  backward(g);
+
+  ck_assert(!a->requires_grad);
+  ck_assert(!b->requires_grad);
+  ck_assert(!c->requires_grad);
+  ck_assert(!y1->requires_grad);
+  ck_assert(y2->requires_grad);
+  ck_assert(g->requires_grad);
+
+  assert_almost_eq(grad(x), a_v);
+  assert_almost_eq(grad(b), 0.0);
+
+  G_CTX_Destroy(ctx);
+}
+END_TEST
+
 Suite*
 graph_suite(void)
 {
@@ -70,6 +106,7 @@ graph_suite(void)
 
   tcase_add_test(tc_core, integration_1);
   tcase_add_test(tc_core, integration_2);
+  tcase_add_test(tc_core, integration_3);
   suite_add_tcase(s, tc_core);
 
   return s;
