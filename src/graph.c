@@ -183,3 +183,16 @@ G_Minus(GRAPH_CTX ctx, GraphNode* const x)
 
   return v;
 }
+
+GraphNode*
+G_MatMul(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
+{
+  GraphNode* v = G_New(ctx, MATMUL, 2);
+  v->operands[0] = x;
+  v->operands[1] = y;
+
+  v->forward_f = G_MatMul_Forward;
+  v->backward_f = G_MatMul_Backward;
+
+  return v;
+}

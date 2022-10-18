@@ -1,6 +1,7 @@
 #ifndef SCORCH_TENSOR_H
 #define SCORCH_TENSOR_H
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef double T_eltype;
 
@@ -111,6 +112,12 @@ void
 T_Minus_(Tensor*, Tensor*);
 
 void
-T_GEMM_(Tensor*, Tensor*, Tensor*, T_eltype, T_eltype);
+T_GEMM_(Tensor*, Tensor*, bool, Tensor*, bool, T_eltype, T_eltype);
+
+Tensor*
+T_MatMul(Tensor*, Tensor*);
+
+void
+T_MatMul_(Tensor*, Tensor*, Tensor*);
 
 #endif // SCORCH_TENSOR_H

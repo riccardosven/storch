@@ -297,11 +297,11 @@ T_Log(Tensor* a)
 }
 
 void
-T_GEMM_(Tensor* t, Tensor* a, Tensor* b, T_eltype alpha, T_eltype beta)
+T_GEMM_(Tensor* t, Tensor* a, bool Ta, Tensor* b, bool Tb, T_eltype alpha, T_eltype beta)
 {
   cblas_dgemm(CblasColMajor,
-              CblasNoTrans,
-              CblasNoTrans,
+              Ta ? CblasTrans : CblasNoTrans,
+              Tb ? CblasTrans : CblasNoTrans,
               a->n,
               b->m,
               a->m,
@@ -314,3 +314,25 @@ T_GEMM_(Tensor* t, Tensor* a, Tensor* b, T_eltype alpha, T_eltype beta)
               t->data,
               t->n);
 }
+
+
+Tensor*
+T_MatMul(Tensor *a, Tensor*b)
+{
+  assert(a->m == b->n);
+
+  Tensor* t = T_New(a->n, b->m);
+
+  T_MatMul_(t, a, b);
+
+  return t;
+}
+
+void
+T_MatMul_(Tensor* t, Tensor* a,Tensor*  b)
+{
+  assert(t->n == a->n && t->m == b->m && a->m == b->n);
+
+  T_GEMM_(t, a, false, b, false, 1.0, 0.0);
+}
+

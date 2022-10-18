@@ -2,6 +2,7 @@
 #include "scorch/scorch.h"
 #include "scorch/tensor.h"
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 int
@@ -27,7 +28,7 @@ main(void)
    */
 
   // c = alpha*a@b + beta*c
-  T_GEMM_(c, a, b, alpha, beta);
+  T_GEMM_(c, a, false, b, false, alpha, beta);
 
   T_eltype r[] = { alpha * (1 * 3 + 3 * 2 + 5 * 0) + beta * 1,
                    alpha * (2 * 3 + 4 * 2 + 6 * 0) + beta * 2,
