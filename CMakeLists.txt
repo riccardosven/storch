@@ -19,6 +19,7 @@ include_directories("include")
 
 add_subdirectory(src)
 
+include(CTest)
 enable_testing()
 
 add_subdirectory(tests)
