@@ -1,7 +1,10 @@
-#include "scorch/graph.h"
 #include "scorch/scorch.h"
 #include "scorch/tensor.h"
+#include "graph.h"
+#include "ops.h"
+
 #include <assert.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 void

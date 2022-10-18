@@ -1,6 +1,9 @@
-#include "scorch/graph.h"
 #include <assert.h>
 #include <tgmath.h>
+
+#include "ops.h"
+#include "graph.h"
+#include "scorch/scorch.h"
 
 void
 G_Product_Forward(GraphNode* x)

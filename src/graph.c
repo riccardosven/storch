@@ -1,18 +1,48 @@
-
-
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "scorch/graph.h"
-#include "scorch/tensor.h"
+#include "scorch/scorch.h"
 
 
-typedef struct graph_ctx* GRAPH_CTX;
+typedef enum
+{
+  PARAMETER,
+  NONE,
+  VALUE,
+  SUM,
+  PRODUCT,
+  DIFFERENCE,
+  DIVISION,
+  EXPONENTIAL,
+  POWER,
+  MINUS,
+  N_OPS
+} Op;
+
+
+struct graphnode_s
+{
+  Tensor t;
+  Tensor g;
+  bool requires_grad;
+  Op op;
+  size_t arity;
+  struct graphnode_s** operands;
+};
+
+
+struct graph_ctx_s
+{
+  GraphNode** arena;
+  size_t len;
+  size_t cap;
+};
+
 
 GRAPH_CTX
 G_CTX_New()
 {
-  GRAPH_CTX ctx = malloc(sizeof(struct graph_ctx));
+  GRAPH_CTX ctx = malloc(sizeof(struct graph_ctx_s));
   ctx->arena = NULL;
   ctx->cap = 0;
   ctx->len = 0;
