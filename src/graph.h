@@ -6,6 +6,7 @@
 
 typedef enum
 {
+  PARAMETER,
   NONE,
   VALUE,
   SUM,
@@ -131,7 +132,8 @@ G_Value(GRAPH_CTX ctx, Tensor x)
 GraphNode*
 G_Parameter(GRAPH_CTX ctx, Tensor x)
 {
-  GraphNode* v = G_Value(ctx, x);
+  GraphNode* v = G_New(ctx, PARAMETER, 0);
+  v->t = x;
   v->requires_grad = true;
 
   return v;

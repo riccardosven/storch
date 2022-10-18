@@ -19,6 +19,7 @@ forward(GraphNode* x)
   }
 
   switch (x->op) {
+    case PARAMETER:
     case VALUE:
       break;
     case PRODUCT:
@@ -57,8 +58,10 @@ value(GraphNode* x)
 static void
 backward_impl(GraphNode* x)
 {
+  assert(x->requires_grad);
+
   switch (x->op) {
-    case VALUE:
+    case PARAMETER:
       break;
     case SUM:
       G_Sum_Backward(x);
@@ -81,6 +84,7 @@ backward_impl(GraphNode* x)
     case MINUS:
       G_Minus_Backward(x);
       break;
+    case VALUE:
     case NONE:
     default:
       assert(0);
