@@ -12,6 +12,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(ClangFormat)
 
+set(CB_VENDOR OpenBLAS)
+find_package(BLAS)
+
 include_directories("include")
 
 add_subdirectory(src)
