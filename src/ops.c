@@ -193,17 +193,21 @@ G_MatMul_Backward(GraphNode* x)
 {
   assert(x->op == MATMUL);
   assert(x->arity == 2);
-}
+
+  Tensor *W = x->operands[0]->t;
+  Tensor *X = x->operands[1]->t;
+  Tensor *dY = x->g;
+
+  Tensor *dW = x->operands[0]->g;
+  Tensor *dX = x->operands[1]->g;
+
+  T_GEMM_(dW, dY, false, X, true, 1.0, 1.0);
+  T_GEMM_(dX, W, true, dY, false, 1.0, 1.0);
 
 /*
-dx = W'dy
-dw = dyX'
-
-
-
-
 y = WX
-mn = mq x qn
-
-
+dw = dyX'
+dx = W'dy
 */
+
+}

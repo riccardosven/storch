@@ -37,12 +37,8 @@ backward_impl(GraphNode* const x)
 
   for (size_t i = 0; i < x->arity; i++)
     if (!x->operands[i]->g) {
-      size_t n = x->operands[i]->t->n;
-      size_t m = x->operands[i]->t->m;
 
-      printf("%zu %zu\n", n, m);
-
-      x->operands[i]->g = T_Zeros(n, m);
+      x->operands[i]->g = T_ZerosLike(x->operands[i]->t);
     }
 
   if (x->backward_f)

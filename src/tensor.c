@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <cblas.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <tgmath.h>
 
 #define check_sizes(t, a, b)                                                   \
@@ -23,7 +24,7 @@ isscalar(Tensor* t)
 Tensor*
 T_New(size_t n, size_t m)
 {
-  Tensor* t = malloc(sizeof *t);
+  Tensor* t = malloc(sizeof (Tensor));
   t->n = n;
   t->m = m;
   t->data = malloc(sizeof(T_eltype) * n * m);
@@ -82,7 +83,7 @@ Tensor*
 T_Wrap(size_t n, size_t m, T_eltype s[static n * m])
 {
   Tensor* t = T_New(n, m);
-  for (size_t i = 0; i < nelems(t); i++)
+  for (size_t i = 0; i < n*m; i++)
     t->data[i] = s[i];
 
   return t;
@@ -299,20 +300,23 @@ T_Log(Tensor* a)
 void
 T_GEMM_(Tensor* t, Tensor* a, bool Ta, Tensor* b, bool Tb, T_eltype alpha, T_eltype beta)
 {
-  cblas_dgemm(CblasColMajor,
-              Ta ? CblasTrans : CblasNoTrans,
-              Tb ? CblasTrans : CblasNoTrans,
-              a->n,
-              b->m,
-              a->m,
-              alpha,
-              a->data,
-              a->n,
-              b->data,
-              b->n,
-              beta,
-              t->data,
-              t->n);
+
+  cblas_dgemm(
+      CblasColMajor,
+      Ta ? CblasTrans : CblasNoTrans,
+      Tb ? CblasTrans : CblasNoTrans,
+      t->n,
+      t->m,
+      Ta ? a->n : a->m,
+      alpha,
+      a->data,
+      a->n,
+      b->data,
+      b->n,
+      beta,
+      t->data,
+      t->n);
+
 }
 
 
@@ -332,6 +336,16 @@ void
 T_MatMul_(Tensor* t, Tensor* a,Tensor*  b)
 {
   assert(t->n == a->n && t->m == b->m && a->m == b->n);
+
+  /*
+  for (size_t i=0; i<t->n; i++){
+    for (size_t j=0; j<t->m; j++){
+      t->data[i + j*t->n] = 0;
+      for (size_t k=0; k< a->m; k++)
+        t->data[i + j*t->n] += a->data[i + k*t->n] * b->data[k + j * b->n];
+    }
+  }
+  */
 
   T_GEMM_(t, a, false, b, false, 1.0, 0.0);
 }
