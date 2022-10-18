@@ -4,7 +4,7 @@ add_library(scorch tensor.c arena.c ops.c graph.c scorch.c ${HEADER_LIST})
 
 target_include_directories(scorch PUBLIC ../include)
 
-target_link_libraries(scorch PRIVATE m blas)
+target_link_libraries(scorch PRIVATE m cblas)
 
 source_group(
     TREE "${PROJECT_SOURCE_DIR}/include"

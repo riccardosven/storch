@@ -6,7 +6,7 @@ foreach(TESTFILE ${TESTFILES})
     get_filename_component(TESTEXEC ${TESTFILE} NAME_WE)
 
     add_executable(${TESTEXEC} ${TESTFILE})
-    target_link_libraries(${TESTEXEC} PRIVATE scorch m)
+    target_link_libraries(${TESTEXEC} PRIVATE scorch)
 
     add_test(NAME ${TESTEXEC} COMMAND ${TESTEXEC})
     # add_test(NAME ${TESTEXEC}_memcheck COMMAND valgrind ./${TESTEXEC})

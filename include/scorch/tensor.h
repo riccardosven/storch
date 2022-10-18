@@ -33,7 +33,7 @@ void*
 T_Destroy(Tensor* t);
 
 Tensor*
-T_Wrap(SCORCH_CTX, size_t n, size_t m, T_eltype[]);
+T_Wrap(SCORCH_CTX, size_t n, size_t m, T_eltype[static n*m]);
 
 Tensor* T_Scalar(SCORCH_CTX, T_eltype);
 
