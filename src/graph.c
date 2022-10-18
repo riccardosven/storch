@@ -1,43 +1,11 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+
 
 #include <stdbool.h>
 #include <stdlib.h>
 
-typedef enum
-{
-  PARAMETER,
-  NONE,
-  VALUE,
-  SUM,
-  PRODUCT,
-  DIFFERENCE,
-  DIVISION,
-  EXPONENTIAL,
-  POWER,
-  MINUS,
-  N_OPS
-} Op;
+#include "scorch/graph.h"
+#include "scorch/tensor.h"
 
-typedef struct node
-{
-  Tensor t;
-  Tensor g;
-  bool requires_grad;
-  Op op;
-  size_t arity;
-  struct node** operands;
-} GraphNode;
-
-static struct graph_ctx
-{
-  GraphNode** arena;
-  size_t len;
-  size_t cap;
-} graph_ctx;
-
-Tensor
-value(GraphNode*);
 
 typedef struct graph_ctx* GRAPH_CTX;
 
@@ -52,7 +20,7 @@ G_CTX_New()
   return ctx;
 }
 
-GraphNode*
+static GraphNode*
 G_Malloc(GRAPH_CTX ctx)
 {
   if (ctx->cap == ctx->len) {
@@ -67,7 +35,7 @@ G_Malloc(GRAPH_CTX ctx)
   return g;
 }
 
-GraphNode*
+static GraphNode*
 G_New(GRAPH_CTX ctx, Op op, size_t arity)
 {
   GraphNode* v = G_Malloc(ctx);
@@ -107,7 +75,7 @@ G_CTX_Destroy(GRAPH_CTX ctx)
 }
 
 GraphNode*
-G_Product(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
+G_Product(GRAPH_CTX ctx, GraphNode* const  x, GraphNode* const  y)
 {
 
   GraphNode* v = G_New(ctx, PRODUCT, 2);
@@ -119,7 +87,7 @@ G_Product(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
 }
 
 GraphNode*
-G_Value(GRAPH_CTX ctx, Tensor x)
+G_Value(GRAPH_CTX ctx, const Tensor x)
 {
 
   GraphNode* v = G_New(ctx, VALUE, 0);
@@ -130,7 +98,7 @@ G_Value(GRAPH_CTX ctx, Tensor x)
 }
 
 GraphNode*
-G_Parameter(GRAPH_CTX ctx, Tensor x)
+G_Parameter(GRAPH_CTX ctx, const Tensor x)
 {
   GraphNode* v = G_New(ctx, PARAMETER, 0);
   v->t = x;
@@ -140,7 +108,7 @@ G_Parameter(GRAPH_CTX ctx, Tensor x)
 }
 
 GraphNode*
-G_Sum(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
+G_Sum(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
 
   GraphNode* v = G_New(ctx, SUM, 2);
@@ -152,7 +120,7 @@ G_Sum(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
 }
 
 GraphNode*
-G_Diff(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
+G_Diff(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
 
   GraphNode* v = G_New(ctx, DIFFERENCE, 2);
@@ -164,7 +132,7 @@ G_Diff(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
 }
 
 GraphNode*
-G_Div(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
+G_Div(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
   GraphNode* v = G_New(ctx, DIVISION, 2);
 
@@ -175,7 +143,7 @@ G_Div(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
 }
 
 GraphNode*
-G_Exp(GRAPH_CTX ctx, GraphNode* x)
+G_Exp(GRAPH_CTX ctx, GraphNode* const x)
 {
   GraphNode* v = G_New(ctx, EXPONENTIAL, 1);
 
@@ -185,7 +153,7 @@ G_Exp(GRAPH_CTX ctx, GraphNode* x)
 }
 
 GraphNode*
-G_Pow(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
+G_Pow(GRAPH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
   GraphNode* v = G_New(ctx, POWER, 2);
 
@@ -196,11 +164,9 @@ G_Pow(GRAPH_CTX ctx, GraphNode* x, GraphNode* y)
 }
 
 GraphNode*
-G_Minus(GRAPH_CTX ctx, GraphNode* x)
+G_Minus(GRAPH_CTX ctx, GraphNode* const x)
 {
   GraphNode* v = G_New(ctx, MINUS, 1);
   v->operands[0] = x;
   return v;
 }
-
-#endif // GRAPH_H

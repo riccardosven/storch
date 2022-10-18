@@ -5,11 +5,13 @@
 #include "scorch.h"
 
 
-int main() {
+int
+main()
+{
 
   GRAPH_CTX ctx = G_CTX_New();
 
-  GraphNode *x = G_Value(ctx, 14);
+  GraphNode *x = G_Parameter(ctx, 14);
 
   GraphNode *t = G_Product(ctx, G_Product(ctx, G_Product(ctx, G_Product(ctx, x,x), x), x), x);
 
@@ -17,7 +19,6 @@ int main() {
 
   printf("x: %f\n", value(x));
 
-  t->g = 1;
   backward(t);
 
   printf("x^5: %f\n", value(t));

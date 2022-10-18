@@ -1,15 +1,11 @@
-#ifndef SCORCH_H
-#define SCORCH_H
-
-typedef double Tensor;
-
-#include "graph.h"
-#include "operations.h"
+#include "scorch/graph.h"
+#include "scorch/scorch.h"
+#include "scorch/tensor.h"
 #include <assert.h>
 #include <stdbool.h>
 
 void
-forward(GraphNode* x)
+forward(GraphNode* const x)
 {
 
   for (size_t i = 0; i < x->arity; i++) {
@@ -50,13 +46,13 @@ forward(GraphNode* x)
 }
 
 Tensor
-value(GraphNode* x)
+value(const GraphNode* const x)
 {
   return x->t;
 }
 
 static void
-backward_impl(GraphNode* x)
+backward_impl(GraphNode* const x)
 {
   assert(x->requires_grad);
 
@@ -96,16 +92,14 @@ backward_impl(GraphNode* x)
 }
 
 void
-backward(GraphNode* x)
+backward(GraphNode* const x)
 {
   x->g = 1;
   backward_impl(x);
 }
 
 Tensor
-grad(GraphNode* x)
+grad(const GraphNode* const x)
 {
   return x->g;
 }
-
-#endif // SCORCH_H

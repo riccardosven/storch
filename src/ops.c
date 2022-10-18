@@ -1,7 +1,4 @@
-#ifndef OPERATIONS_H
-#define OPERATIONS_H
-
-#include "graph.h"
+#include "scorch/graph.h"
 #include <assert.h>
 #include <tgmath.h>
 
@@ -139,5 +136,3 @@ G_Minus_Backward(GraphNode* x)
 
   x->operands[0]->g -= x->g;
 }
-
-#endif // OPERATIONS_H

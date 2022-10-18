@@ -1,4 +1,4 @@
-CC=clang-10
+CC=gcc
 CFLAGS=-Wall -pedantic -std=c11 -ggdb
 CINCLUDES=-Isrc/ 
 
