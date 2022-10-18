@@ -9,9 +9,9 @@ int main(void)
 
   forward(g);
 
-  assert_almost_eq(value(g), pow(13.2, 2.2));
+  int retval = check_almost_eq(value(g), pow(13.2, 2.2));
 
   G_CTX_Destroy(ctx);
 
-  return 0;
+  return retval;
 }

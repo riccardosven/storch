@@ -12,7 +12,9 @@ int main(void)
   forward(g);
   backward(g);
 
-  assert_almost_eq(grad(a), exp(7.3));
+  int retval = check_almost_eq(grad(a), exp(7.3));
 
   G_CTX_Destroy(ctx);
+
+  return retval;
 }

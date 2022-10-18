@@ -8,8 +8,8 @@ int main(void)
 
   forward(g);
 
-  assert_almost_eq(value(g), 13 - 24);
+  int retval = check_almost_eq(value(g), 13 - 24);
   G_CTX_Destroy(ctx);
 
-  return 0;
+  return retval;
 }

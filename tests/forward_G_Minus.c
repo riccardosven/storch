@@ -8,9 +8,9 @@ int main(void)
   GraphNode* g = G_Minus(ctx, G_Value(ctx, 8.88));
 
   forward(g);
-  assert_almost_eq(value(g), -8.88);
+  int retval = check_almost_eq(value(g), -8.88);
 
   G_CTX_Destroy(ctx);
 
-  return 0;
+  return retval;
 }
