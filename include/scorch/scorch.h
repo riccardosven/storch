@@ -1,6 +1,8 @@
 #ifndef SCORCH_H
 #define SCORCH_H
 
+#include <stdio.h>
+
 typedef struct scorch_ctx_s* SCORCH_CTX;
 typedef struct graphnode_s GraphNode;
 typedef struct scorch_tensor_s Tensor;
@@ -46,6 +48,9 @@ G_Minus(SCORCH_CTX ctx, GraphNode* const x);
 GraphNode*
 G_MatMul(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
 
+GraphNode*
+G_SumReduce(SCORCH_CTX ctx, GraphNode* const x);
+
 /* GRAPH AND GRADIENT EVALUATION */
 void
 forward(GraphNode* const x);
@@ -57,5 +62,8 @@ value(const GraphNode* const x);
 
 Tensor*
 grad(const GraphNode* const x);
+
+void
+print(Tensor * const x);
 
 #endif // SCORCH_H

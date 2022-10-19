@@ -130,4 +130,17 @@ T_MatMul(SCORCH_CTX, Tensor*, Tensor*);
 void
 T_MatMul_(Tensor*, Tensor*, Tensor*);
 
+Tensor*
+T_SumReduce(SCORCH_CTX, Tensor*);
+
+void
+T_SumReduce_(Tensor*, Tensor*);
+
+Tensor*
+T_BroadcastAdd(SCORCH_CTX, Tensor*,  Tensor*);
+
+void
+T_BroadcastAdd_(Tensor*, Tensor*,  Tensor*);
+
+
 #endif // SCORCH_TENSOR_H

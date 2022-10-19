@@ -10,6 +10,9 @@
 #define check_sizes(t, a, b)                                                   \
   assert(t->n == a->n && t->m == a->m && t->n == b->n && t->m == b->m)
 
+#define max(a, b)                                                              \
+  ((a) > (b)) ? (a) : (b)
+
 size_t
 nelems(Tensor* t)
 {
@@ -21,6 +24,7 @@ isscalar(Tensor* t)
 {
   return t->n == 1 && t->m == 1;
 }
+
 
 Tensor*
 T_New(SCORCH_CTX ctx, size_t n, size_t m)
@@ -359,3 +363,72 @@ T_MatMul_(Tensor* t, Tensor* a,Tensor*  b)
   T_GEMM_(t, a, false, b, false, 1.0, 0.0);
 }
 
+Tensor *
+T_SumReduce(SCORCH_CTX ctx, Tensor *a)
+{
+    Tensor *t = T_New(ctx, a->n, 1);
+    T_SumReduce_(t, a);
+
+    return t;
+}
+
+
+void
+T_SumReduce_(Tensor *t, Tensor *a)
+{
+  assert(t->n == a->n && t->m == 1);
+
+  for (size_t i=0; i<t->n; i++) {
+      t->data[i] = 0;
+      for (size_t j=0; j < a->m; j++) {
+          t->data[i] += a->data[i + a->n * j];
+      }
+  }
+}
+
+
+Tensor*
+T_BroadcastAdd(SCORCH_CTX ctx, Tensor *a, Tensor *b)
+{
+    Tensor *t = T_New(ctx, max(a->n, b->n), max(a->m, b->m));
+
+    T_BroadcastAdd_(t, a, b);
+
+    return t;
+}
+
+void
+T_BroadcastAdd_(Tensor *t, Tensor *a, Tensor* b)
+{
+    if ((a->n == b->n) && (a->m == b->m)) {
+            /* matrix-matrix */
+        T_Sum_(t, a, b);
+    } else if  ((b->n == 1) && (b->m==1)) {
+        /* matrix-scalar */
+        for (size_t i=0; i < nelems(t); i++) {
+            t->data[i] = a->data[i] + b->data[0];
+        }
+    } else if ((a->n == b->n) && (b->m == 1)) {
+    /* matrix-column */
+        for (size_t i=0; i < a->n; i++) {
+            for (size_t j=0; j < a->m; j++) {
+                t->data[i + a->n*j]  = a->data[i + a->n*j] + b->data[i];
+            }
+        }
+    } else if ((a->m == b->m) && (b->n == 1)) {
+        /* matrix-row */
+        for (size_t i=0; i < a->n; i++) {
+            for (size_t j=0; j < a->m; j++) {
+                t->data[i + a->n*j]  = a->data[i + a->n*j] + b->data[j];
+            }
+        }
+    } else if (
+            ((a->n == 1) && (a->m == b->m)) ||
+            ((a->n == b->n) && (a->m == 1)) ||
+            ((a->n == 1) && (a->m == 1))
+            ){
+        T_BroadcastAdd_(t, b, a);
+    } else {
+        assert(0);
+    }
+}

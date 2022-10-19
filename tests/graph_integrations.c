@@ -103,7 +103,54 @@ integration_3(void)
 }
 
 int
+integration_4(void)
+{
+    /* g = sum_i ( (x_i + i)**2) */
+    SCORCH_CTX ctx = SCORCH_CTX_New();
+    /* 0.5  1.1 -0.7
+     * 0.7 -0.2  4.4
+     */
+
+    T_eltype b_v[] = {1, 1, 2, 2, 3, 3};
+
+    T_eltype x_v[] = {0.5, 0.7, 1.1, -0.2, -0.7, 4.4};
+
+    GraphNode* x = G_Parameter(ctx, T_Wrap(ctx, 2, 3, x_v));
+    GraphNode* bias = G_Value(ctx, T_Wrap(ctx, 2, 3, b_v));
+
+    GraphNode* g = G_SumReduce(ctx, 
+            G_Pow(ctx,
+            G_Sum(ctx, x, bias),
+            G_Value(ctx, T_Full(ctx, 2, 3, 2.0))
+            )
+            );
+
+    forward(g);
+    backward(g);
+
+    print(value(x));
+    printf("grad\n");
+    print(grad(x));
+
+    int retval = check_almost_eq(value(g)->data[0], 17.15) + check_almost_eq(value(g)->data[1], 60.89);
+
+
+    retval += check_almost_eq(grad(x)->data[0], 3.0);
+    retval += check_almost_eq(grad(x)->data[1], 3.4);
+    retval += check_almost_eq(grad(x)->data[2], 6.2);
+    retval += check_almost_eq(grad(x)->data[3], 3.6);
+    retval += check_almost_eq(grad(x)->data[4], 4.6);
+    retval += check_almost_eq(grad(x)->data[5], 14.8);
+
+
+  SCORCH_CTX_Destroy(ctx);
+
+    return retval;
+}
+
+
+int
 main(void)
 {
-  return integration_1() + integration_2() + integration_3();
+  return integration_1() + integration_2() + integration_3() + integration_4();
 }

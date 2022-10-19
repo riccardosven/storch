@@ -194,7 +194,7 @@ G_Minus_Backward(GraphNode* x)
   assert(x->arity == 1);
 
   // x->operands[0]->g -= x->g;
-  T_Sub_(x->operands[0]->g, x->g);
+  T_Sub_(grad(x->operands[0]), grad(x));
 }
 
 void
@@ -227,4 +227,27 @@ G_MatMul_Backward(GraphNode* x)
   dw = dyX'
   dx = W'dy
   */
+}
+
+void
+G_SumReduce_Forward(GraphNode *x)
+{
+  assert(x->op == SUMREDUCE);
+  assert(x->arity == 1);
+
+  x->t = T_SumReduce(x->ctx, value(x->operands[0]));
+}
+
+void
+G_SumReduce_Backward(GraphNode *x)
+{
+
+     /*
+      * y = ones'x
+      * dy = ones'dx
+      */
+    assert(x->op == SUMREDUCE);
+    assert(x->arity == 1);
+
+    T_BroadcastAdd_(grad(x->operands[0]),grad(x->operands[0]), grad(x));
 }

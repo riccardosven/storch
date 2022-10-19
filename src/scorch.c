@@ -62,3 +62,13 @@ grad(const GraphNode* const x)
 {
   return x->g;
 }
+
+void
+print(Tensor * const x) {
+    for (size_t i=0; i<x->n; i++) {
+        for (size_t j =0; j<x->m; j++) {
+            printf("%f ", x->data[i + x->n*j]);
+        }
+        printf("\n");
+    }
+}

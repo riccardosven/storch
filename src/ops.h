@@ -17,7 +17,9 @@ typedef enum
   PRODUCT,
   SUM,
   VALUE,
-  N_OPS
+  SUMREDUCE,
+  MEANREDUCE,
+  N_OPS,
 } Op;
 
 void
@@ -73,5 +75,11 @@ G_Sum_Forward(GraphNode* x);
 
 void
 G_Sum_Backward(GraphNode* x);
+
+void
+G_SumReduce_Forward(GraphNode*x );
+
+void
+G_SumReduce_Backward(GraphNode* x);
 
 #endif // SCORCH_OPS_H
