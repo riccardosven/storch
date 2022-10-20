@@ -171,11 +171,10 @@ G_MatMul(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
   return v;
 }
 
-
 GraphNode*
 G_SumReduce(SCORCH_CTX ctx, GraphNode* const x)
 {
-  GraphNode *v = G_New(ctx, SUMREDUCE, 1);
+  GraphNode* v = G_New(ctx, SUMREDUCE, 1);
   v->operands[0] = x;
 
   v->forward_f = G_SumReduce_Forward;

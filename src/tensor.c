@@ -1,7 +1,7 @@
 #include "scorch/tensor.h"
+#include "arena.h"
 #include "scorch/scorch.h"
 #include <assert.h>
-#include "arena.h"
 #include <cblas.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -10,66 +10,78 @@
 #define check_sizes(t, a, b)                                                   \
   assert(t->n == a->n && t->m == a->m && t->n == b->n && t->m == b->m)
 
-#define max(a, b)                                                              \
-  ((a) > (b)) ? (a) : (b)
+#define max(a, b) ((a) > (b)) ? (a) : (b)
 
-#define BROADCAST(fname, op)                                                   \
-    if ((a->n == b->n) && (a->m == b->m)) {                                    \
-            /* matrix-matrix */                                                \
-        for (size_t i=0; i<nelems(t); i++) {                                   \
-            t->data[i] = op(a->data[i], b->data[i]);                           \
-        }                                                                      \
-    } else if  ((b->n == 1) && (b->m==1)) {                                    \
-        /* matrix-scalar */                                                    \
-        for (size_t i=0; i < nelems(t); i++) {                                 \
-            t->data[i] = op(a->data[i], b->data[0]);                           \
-        }                                                                      \
-    } else if ((a->n == b->n) && (b->m == 1)) {                                \
-    /* matrix-column */                                                        \
-        for (size_t i=0; i < a->n; i++) {                                      \
-            for (size_t j=0; j < a->m; j++) {                                  \
-                t->data[i + a->n*j]  = op(a->data[i + a->n*j], b->data[i]);    \
-            }                                                                  \
-        }                                                                      \
-    } else if ((a->m == b->m) && (b->n == 1)) {                                \
-        /* matrix-row */                                                       \
-        for (size_t i=0; i < a->n; i++) {                                      \
-            for (size_t j=0; j < a->m; j++) {                                  \
-                t->data[i + a->n*j]  = op(a->data[i + a->n*j], b->data[j]);    \
-            }                                                                  \
-        }                                                                      \
-    } else if (                                                                \
-            ((a->n == 1) && (a->m == b->m)) ||                                 \
-            ((a->n == b->n) && (a->m == 1)) ||                                 \
-            ((a->n == 1) && (a->m == 1))                                       \
-            ){                                                                 \
-        fname(t, b, a);                                              \
-    } else {                                                                   \
-        assert(0);                                                             \
-    }                                                                          \
+#define data(m, i, j) m->data[(i) + (m->n) * (j)]
+
+static inline void
+T_Broadcast_(T_eltype (*operation)(T_eltype, T_eltype),
+             Tensor* t,
+             Tensor* a,
+             Tensor* b)
+{
+  if ((a->n == b->n) && (a->m == b->m)) {
+    /* matrix-matrix */
+    for (size_t i = 0; i < nelems(t); i++) {
+      t->data[i] = operation(a->data[i], b->data[i]);
+    }
+  } else if ((b->n == 1) && (b->m == 1)) {
+    /* matrix-scalar */
+    for (size_t i = 0; i < nelems(t); i++) {
+      t->data[i] = operation(a->data[i], b->data[0]);
+    }
+  } else if ((a->n == b->n) && (b->m == 1)) {
+    /* matrix-column */
+    for (size_t i = 0; i < nelems(a); i++) {
+      t->data[i] = operation(a->data[i], b->data[i % a->n]);
+    }
+  } else if ((a->m == b->m) && (b->n == 1)) {
+    /* matrix-row */
+    for (size_t i = 0; i < nelems(a); i++) {
+      t->data[i] = operation(a->data[i], b->data[i / a->n]);
+    }
+  } else if ((a->n == b->n) && (a->m == 1)) {
+    /* column-matrix */
+    for (size_t i = 0; i < nelems(b); i++) {
+      t->data[i] = operation(a->data[i % b->n], b->data[i]);
+    }
+  } else if ((a->n == 1) && (a->m == b->m)) {
+    /* row-matrix */
+    for (size_t i = 0; i < nelems(b); i++) {
+      t->data[i] = operation(a->data[i / b->n], b->data[i]);
+    }
+  } else if ((a->n == 1) && (a->m == 1)) {
+    /* scalar-matrix */
+    for (size_t i = 0; i < nelems(b); i++) {
+      t->data[i] = operation(a->data[0], b->data[i]);
+    }
+  } else {
+    assert(0);
+  }
+}
 
 static inline T_eltype
 op_sum(T_eltype a, T_eltype b)
 {
-    return a + b;
+  return a + b;
 }
 
 static inline T_eltype
 op_mul(T_eltype a, T_eltype b)
 {
-    return a * b;
+  return a * b;
 }
 
 static inline T_eltype
 op_diff(T_eltype a, T_eltype b)
 {
-    return a - b;
+  return a - b;
 }
 
 static inline T_eltype
 op_div(T_eltype a, T_eltype b)
 {
-    return a / b;
+  return a / b;
 }
 
 size_t
@@ -83,7 +95,6 @@ isscalar(Tensor* t)
 {
   return t->n == 1 && t->m == 1;
 }
-
 
 Tensor*
 T_New(SCORCH_CTX ctx, size_t n, size_t m)
@@ -129,7 +140,6 @@ T_ZerosLike(SCORCH_CTX ctx, Tensor* t)
   return T_Zeros(ctx, t->n, t->m);
 }
 
-
 Tensor*
 T_OnesLike(SCORCH_CTX ctx, Tensor* t)
 {
@@ -155,7 +165,7 @@ Tensor*
 T_Wrap(SCORCH_CTX ctx, size_t n, size_t m, T_eltype s[static n * m])
 {
   Tensor* t = T_New(ctx, n, m);
-  for (size_t i = 0; i < n*m; i++)
+  for (size_t i = 0; i < n * m; i++)
     t->data[i] = s[i];
 
   return t;
@@ -195,7 +205,9 @@ T_SetItem(Tensor* t, size_t i, size_t j, T_eltype d)
 Tensor*
 T_Sum(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(ctx, a->n, a->m);
+  size_t n = max(a->n, b->n);
+  size_t m = max(a->m, b->m);
+  Tensor* t = T_New(ctx, n, m);
 
   T_Sum_(t, a, b);
 
@@ -205,7 +217,7 @@ T_Sum(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 void
 T_Sum_(Tensor* t, Tensor* a, Tensor* b)
 {
-    BROADCAST(T_Sum_,op_sum)
+  T_Broadcast_(op_sum, t, a, b);
 }
 
 void
@@ -217,13 +229,16 @@ T_Add_(Tensor* t, Tensor* a)
 void
 T_Diff_(Tensor* t, Tensor* a, Tensor* b)
 {
-    BROADCAST(T_Diff_,op_diff)
+  T_Broadcast_(op_diff, t, a, b);
 }
 
 Tensor*
 T_Diff(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(ctx, a->n, a->m);
+  size_t n = max(a->n, b->n);
+  size_t m = max(a->m, b->m);
+  Tensor* t = T_New(ctx, n, m);
+
   T_Diff_(t, a, b);
   return t;
 }
@@ -237,13 +252,16 @@ T_Sub_(Tensor* t, Tensor* a)
 void
 T_Mul_(Tensor* t, Tensor* a, Tensor* b)
 {
-    BROADCAST(T_Mul_,op_mul)
+  T_Broadcast_(op_mul, t, a, b);
 }
 
 Tensor*
 T_Mul(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(ctx, a->n, a->m);
+  size_t n = max(a->n, b->n);
+  size_t m = max(a->m, b->m);
+  Tensor* t = T_New(ctx, n, m);
+
   T_Mul_(t, a, b);
   return t;
 }
@@ -251,13 +269,16 @@ T_Mul(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 void
 T_Div_(Tensor* t, Tensor* a, Tensor* b)
 {
-    BROADCAST(T_Div_,op_div)
+  T_Broadcast_(op_div, t, a, b);
 }
 
 Tensor*
-T_Div(SCORCH_CTX ctx ,Tensor* a, Tensor* b)
+T_Div(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(ctx, a->n, a->m);
+  size_t n = max(a->n, b->n);
+  size_t m = max(a->m, b->m);
+  Tensor* t = T_New(ctx, n, m);
+
   T_Div_(t, a, b);
   return t;
 }
@@ -298,15 +319,16 @@ T_SPow(SCORCH_CTX ctx, Tensor* a, T_eltype b)
 void
 T_Pow_(Tensor* t, Tensor* a, Tensor* b)
 {
-  check_sizes(t, a, b);
-  for (size_t i = 0; i < nelems(t); i++)
-    t->data[i] = pow(a->data[i], b->data[i]);
+  T_Broadcast_(pow, t, a, b);
 }
 
 Tensor*
 T_Pow(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
-  Tensor* t = T_New(ctx, a->n, a->m);
+  size_t n = max(a->n, b->n);
+  size_t m = max(a->m, b->m);
+  Tensor* t = T_New(ctx, n, m);
+
   T_Pow_(t, a, b);
   return t;
 }
@@ -319,7 +341,7 @@ T_Minus_(Tensor* t, Tensor* a)
 }
 
 Tensor*
-T_Minus(SCORCH_CTX ctx ,Tensor* a)
+T_Minus(SCORCH_CTX ctx, Tensor* a)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_Minus_(t, a);
@@ -359,30 +381,33 @@ T_Log(SCORCH_CTX ctx, Tensor* a)
 }
 
 void
-T_GEMM_(Tensor* t, Tensor* a, bool Ta, Tensor* b, bool Tb, T_eltype alpha, T_eltype beta)
+T_GEMM_(Tensor* t,
+        Tensor* a,
+        bool Ta,
+        Tensor* b,
+        bool Tb,
+        T_eltype alpha,
+        T_eltype beta)
 {
 
-  cblas_dgemm(
-      CblasColMajor,
-      Ta ? CblasTrans : CblasNoTrans,
-      Tb ? CblasTrans : CblasNoTrans,
-      t->n,
-      t->m,
-      Ta ? a->n : a->m,
-      alpha,
-      a->data,
-      a->n,
-      b->data,
-      b->n,
-      beta,
-      t->data,
-      t->n);
-
+  cblas_dgemm(CblasColMajor,
+              Ta ? CblasTrans : CblasNoTrans,
+              Tb ? CblasTrans : CblasNoTrans,
+              t->n,
+              t->m,
+              Ta ? a->n : a->m,
+              alpha,
+              a->data,
+              a->n,
+              b->data,
+              b->n,
+              beta,
+              t->data,
+              t->n);
 }
 
-
 Tensor*
-T_MatMul(SCORCH_CTX ctx, Tensor *a, Tensor*b)
+T_MatMul(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 {
   assert(a->m == b->n);
 
@@ -394,7 +419,7 @@ T_MatMul(SCORCH_CTX ctx, Tensor *a, Tensor*b)
 }
 
 void
-T_MatMul_(Tensor* t, Tensor* a,Tensor*  b)
+T_MatMul_(Tensor* t, Tensor* a, Tensor* b)
 {
   assert(t->n == a->n && t->m == b->m && a->m == b->n);
 
@@ -411,42 +436,24 @@ T_MatMul_(Tensor* t, Tensor* a,Tensor*  b)
   T_GEMM_(t, a, false, b, false, 1.0, 0.0);
 }
 
-Tensor *
-T_SumReduce(SCORCH_CTX ctx, Tensor *a)
+Tensor*
+T_SumReduce(SCORCH_CTX ctx, Tensor* a)
 {
-    Tensor *t = T_New(ctx, a->n, 1);
-    T_SumReduce_(t, a);
+  Tensor* t = T_New(ctx, a->n, 1);
+  T_SumReduce_(t, a);
 
-    return t;
+  return t;
 }
 
-
 void
-T_SumReduce_(Tensor *t, Tensor *a)
+T_SumReduce_(Tensor* t, Tensor* a)
 {
   assert(t->n == a->n && t->m == 1);
 
-  for (size_t i=0; i<t->n; i++) {
-      t->data[i] = 0;
-      for (size_t j=0; j < a->m; j++) {
-          t->data[i] += a->data[i + a->n * j];
-      }
+  for (size_t i = 0; i < t->n; i++) {
+    t->data[i] = 0;
+    for (size_t j = 0; j < a->m; j++) {
+      t->data[i] += a->data[i + a->n * j];
+    }
   }
-}
-
-
-Tensor*
-T_BroadcastAdd(SCORCH_CTX ctx, Tensor *a, Tensor *b)
-{
-    Tensor *t = T_New(ctx, max(a->n, b->n), max(a->m, b->m));
-
-    T_BroadcastAdd_(t, a, b);
-
-    return t;
-}
-
-void
-T_BroadcastAdd_(Tensor *t, Tensor *a, Tensor* b)
-{
-    BROADCAST(T_BroadcastAdd_, op_sum)
 }

@@ -77,7 +77,7 @@ void
 G_Sum_Backward(GraphNode* x);
 
 void
-G_SumReduce_Forward(GraphNode*x );
+G_SumReduce_Forward(GraphNode* x);
 
 void
 G_SumReduce_Backward(GraphNode* x);
