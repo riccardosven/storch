@@ -92,8 +92,10 @@ main(void)
   char variety[24];
   char buffer[128];
 
-  fscanf(fp, "%*[^\n]\n");  // Skip header
-
+  if (fscanf(fp, "%*[^\n]\n")) {  // Skip header
+    fprintf(stderr, "Dataset empty !\n");  
+  }
+  
   size_t i = 0;
   while (fgets(buffer, 128, fp)) {
     sscanf(buffer,
