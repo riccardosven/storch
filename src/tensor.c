@@ -109,10 +109,12 @@ T_New(STORCH_CTX ctx, size_t n, size_t m)
 }
 
 Tensor*
-T_Build(STORCH_CTX ctx, size_t n, size_t N, ...)
+T_Build(STORCH_CTX ctx, size_t n, size_t m, size_t N, ...)
 {
 
-  Tensor* t = T_New(ctx, n, N / n);
+  assert(n * m == N);
+
+  Tensor* t = T_New(ctx, n, m);
 
   va_list valist;
 

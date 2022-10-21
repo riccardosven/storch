@@ -111,12 +111,16 @@ integration_4(void)
    * 0.7 -0.2  4.4
    */
 
+  /*
   T_eltype b_v[] = { 1, 1, 2, 2, 3, 3 };
 
   T_eltype x_v[] = { 0.5, 0.7, 1.1, -0.2, -0.7, 4.4 };
 
   GraphNode* x = G_Parameter(ctx, T_Wrap(ctx, 2, 3, x_v));
   GraphNode* bias = G_Value(ctx, T_Wrap(ctx, 2, 3, b_v));
+  */
+  GraphNode* x = G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1, 1, 2, 2, 3, 3));
+  GraphNode* bias = G_Value(ctx, T_Build(ctx, 2, 3, 6, 0.5, 0.7, 1.1, -0.2, -0.7, 4.4));
 
   GraphNode* g = G_SumReduce(
     ctx, G_Pow(ctx, G_Sum(ctx, x, bias), G_Value(ctx, T_Full(ctx, 2, 3, 2.0))));
@@ -154,15 +158,24 @@ integration_5(void)
     T_eltype x = 0.13;
     T_eltype y = -0.52;
     T_eltype a = 1.2;
+    T_eltype b = 0.99;
 
-    GraphNode *g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, x, 0));
-    GraphNode *g2 = G_Parameter(ctx, T_Build(ctx, 1, 2, x, y));
-    GraphNode *g3 = G_Parameter(ctx, T_Build(ctx, 2, 2, a, b));
-    GraphNode *g4 = G_Parameter(ctx, T_Build(ctx, 2, 2, y, y));
+    /*
+    GraphNode *g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, 0.0));
+    GraphNode *g2 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, y));
+    GraphNode *g3 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, a, b));
+    GraphNode *g4 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, y, y));
 
-    GraphNode *y = T_MatMul(ctx, T_MatMul(ctx, g1, T_Pow(ctx, g2, g3)) g4);
+    GraphNode *f = G_MatMul(ctx, G_MatMul(ctx, g1, G_Pow(ctx, g2, g3)), g4);
+    */
 
-    T_print(value(y));
+    GraphNode *g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, 0.0));
+    GraphNode *g4 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, y, y));
+
+    GraphNode *f = G_MatMul(ctx, g1, g4);
+    forward(f);
+
+    print(value(f));
 
     STORCH_CTX_Destroy(ctx);
 
@@ -174,5 +187,5 @@ integration_5(void)
 int
 main(void)
 {
-  return integration_1() + integration_2() + integration_3() + integration_4() + integration_5;
+  return integration_1() + integration_2() + integration_3() + integration_4() + integration_5();
 }

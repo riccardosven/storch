@@ -7,7 +7,7 @@ int
 main(void)
 {
 
-  Tensor* t = T_Build(NULL, 3, 6, 1.0, 2.0, -1.3, 2.2, 4.0, 5.1);
+  Tensor* t = T_Build(NULL, 3, 2, 6, 1.0, 2.0, -1.3, 2.2, 4.0, 5.1);
 
   T_eltype e[] = { 1.0, 2.0, -1.3, 2.2, 4.0, 5.1 };
 
@@ -17,6 +17,9 @@ main(void)
     printf("%f == %f ?\n", t->data[i], e[i]);
     retval += check_almost_eq(t->data[i], e[i]);
   }
+
+  retval += t->n != 3;
+  retval += t->m != 2;
 
   T_Destroy(t);
 

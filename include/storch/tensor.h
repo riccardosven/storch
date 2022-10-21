@@ -146,14 +146,15 @@ T_Wrap(STORCH_CTX ctx, size_t n, size_t m, T_eltype data[static n * m]);
  *
  * @param[in] ctx Optional Storch context.
  * @param[in] n Number of rows.
- * @param[in] N Number of initialization data.
+ * @param[in] m Number of columns.
+ * @param[in] N Number of initialization data (`N == n*m`).
  * @param[in] data data for initialization.
  *
  * @returns A pointer to the allocated tensor.
  *
  */
 Tensor*
-T_Build(STORCH_CTX ctx, size_t n, size_t N, ...);
+T_Build(STORCH_CTX ctx, size_t n, size_t m, size_t N, ...);
 
 /**
  * Create a new 1 by 1 tensor.
