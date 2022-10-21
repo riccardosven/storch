@@ -92,7 +92,7 @@ main(void)
   char variety[24];
   char buffer[128];
 
-  fscanf(fname, "%*[^\n]\n");  // Skip header
+  fscanf(fp, "%*[^\n]\n");  // Skip header
 
   size_t i = 0;
   while (fgets(buffer, 128, fp)) {
