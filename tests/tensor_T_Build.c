@@ -7,7 +7,7 @@ int
 main(void)
 {
 
-  Tensor* t = T_Build(NULL, 3, 6, 1.0, 2.0, -1.3, 2.2, 4.0, 5.1);
+  Tensor* t = T_Build(NULL, 3, 2, 6, 1.0, 2.0, -1.3, 2.2, 4.0, 5.1);
 
   T_eltype e[] = { 1.0, 2.0, -1.3, 2.2, 4.0, 5.1 };
 

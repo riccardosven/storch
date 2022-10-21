@@ -119,9 +119,37 @@ test_matrix_scalar()
 }
 
 int
+test_vector_vector()
+{
+  Tensor* a = T_Build(NULL, 4, 1, 4, 1.0, 2.0, 3.0, 4.0);
+  Tensor* b = T_Build(NULL, 1, 3, 3, 0.6, 0.7, 0.8);
+
+  Tensor* s1 = T_Sum(NULL, a, b);
+
+  T_eltype e[] = {1.6, 2.6, 3.6, 4.6, 1.7, 2.7, 3.7, 4.7, 1.8, 2.8, 3.8, 4.8};
+
+  int retval = 0;
+
+  retval += s1->n != 4;
+  retval += s1->m != 3;
+  for (size_t i=0; i<12; i++) {
+    retval += check_almost_eq(s1->data[i], e[i]);
+  }
+
+  T_Destroy(a);
+  T_Destroy(b);
+  T_Destroy(s1);
+
+  if (retval)
+    printf("FAILURE -> test_vector_vector");
+
+  return retval;
+}
+
+int
 main(void)
 {
 
   return test_matrix_matrix() + test_matrix_row() + test_matrix_col() +
-         test_matrix_scalar();
+         test_matrix_scalar() + test_vector_vector();
 }
