@@ -1,11 +1,11 @@
 #include "common.h"
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 
 int
 main(void)
 {
-  SCORCH_CTX ctx = SCORCH_CTX_New();
+  STORCH_CTX ctx = STORCH_CTX_New();
   GraphNode* g = G_Diff(ctx,
         G_Value(ctx, T_Scalar(ctx, 13)),
         G_Value(ctx, T_Scalar(ctx, 24))
@@ -14,7 +14,7 @@ main(void)
   forward(g);
 
   int retval = check_almost_eq(value(g)->data[0], 13 - 24);
-  SCORCH_CTX_Destroy(ctx);
+  STORCH_CTX_Destroy(ctx);
 
   return retval;
 }

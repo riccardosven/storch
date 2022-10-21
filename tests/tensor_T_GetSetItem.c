@@ -1,6 +1,6 @@
 #include "common.h"
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 #include <stdlib.h>
 
 #define all_almost_eq(a, b, c) almost_eq((a), (c)) && almost_eq((a), (b))

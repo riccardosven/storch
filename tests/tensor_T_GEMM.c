@@ -1,6 +1,6 @@
 #include "common.h"
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <cblas.h>

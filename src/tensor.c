@@ -1,6 +1,6 @@
-#include "scorch/tensor.h"
+#include "storch/tensor.h"
 #include "arena.h"
-#include "scorch/scorch.h"
+#include "storch/storch.h"
 #include <assert.h>
 #include <cblas.h>
 #include <stdbool.h>
@@ -97,7 +97,7 @@ isscalar(const Tensor* const t)
 }
 
 Tensor*
-T_New(SCORCH_CTX ctx, size_t n, size_t m)
+T_New(STORCH_CTX ctx, size_t n, size_t m)
 {
   Tensor* t = T_Malloc(ctx);
   t->n = n;
@@ -108,7 +108,7 @@ T_New(SCORCH_CTX ctx, size_t n, size_t m)
 }
 
 Tensor*
-T_Full(SCORCH_CTX ctx, size_t n, size_t m, T_eltype a)
+T_Full(STORCH_CTX ctx, size_t n, size_t m, T_eltype a)
 {
   Tensor* t = T_New(ctx, n, m);
   for (size_t i = 0; i < T_nelems(t); i++)
@@ -117,37 +117,37 @@ T_Full(SCORCH_CTX ctx, size_t n, size_t m, T_eltype a)
 }
 
 Tensor*
-T_FullLike(SCORCH_CTX ctx, const Tensor* const t, T_eltype a)
+T_FullLike(STORCH_CTX ctx, const Tensor* const t, T_eltype a)
 {
   return T_Full(ctx, t->n, t->m, a);
 }
 
 Tensor*
-T_Ones(SCORCH_CTX ctx, size_t n, size_t m)
+T_Ones(STORCH_CTX ctx, size_t n, size_t m)
 {
   return T_Full(ctx, n, m, 1.0);
 }
 
 Tensor*
-T_Zeros(SCORCH_CTX ctx, size_t n, size_t m)
+T_Zeros(STORCH_CTX ctx, size_t n, size_t m)
 {
   return T_Full(ctx, n, m, 0.0);
 }
 
 Tensor*
-T_ZerosLike(SCORCH_CTX ctx, const Tensor* const t)
+T_ZerosLike(STORCH_CTX ctx, const Tensor* const t)
 {
   return T_Zeros(ctx, t->n, t->m);
 }
 
 Tensor*
-T_OnesLike(SCORCH_CTX ctx, const Tensor* const t)
+T_OnesLike(STORCH_CTX ctx, const Tensor* const t)
 {
   return T_Ones(ctx, t->n, t->m);
 }
 
 Tensor*
-T_Scalar(SCORCH_CTX ctx, T_eltype a)
+T_Scalar(STORCH_CTX ctx, T_eltype a)
 {
   return T_Full(ctx, 1, 1, a);
 }
@@ -162,7 +162,7 @@ T_Destroy(Tensor* t)
 }
 
 Tensor*
-T_Wrap(SCORCH_CTX ctx, size_t n, size_t m, T_eltype s[static n * m])
+T_Wrap(STORCH_CTX ctx, size_t n, size_t m, T_eltype s[static n * m])
 {
   Tensor* t = T_New(ctx, n, m);
   for (size_t i = 0; i < n * m; i++)
@@ -180,7 +180,7 @@ T_Copy_(Tensor* const t, const Tensor* const a)
 }
 
 Tensor*
-T_Copy(SCORCH_CTX ctx, const Tensor* const a)
+T_Copy(STORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_Copy_(t, a);
@@ -203,7 +203,7 @@ T_SetItem(Tensor* const t, size_t i, size_t j, T_eltype d)
 }
 
 Tensor*
-T_Sum(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
+T_Sum(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -233,7 +233,7 @@ T_Diff_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 }
 
 Tensor*
-T_Diff(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
+T_Diff(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -256,7 +256,7 @@ T_Mul_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 }
 
 Tensor*
-T_Mul(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
+T_Mul(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -273,7 +273,7 @@ T_Div_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 }
 
 Tensor*
-T_Div(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
+T_Div(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -292,7 +292,7 @@ T_Scale_(Tensor* const t, T_eltype a, const Tensor* const b)
 }
 
 Tensor*
-T_Scale(SCORCH_CTX ctx, T_eltype a, const Tensor* const b)
+T_Scale(STORCH_CTX ctx, T_eltype a, const Tensor* const b)
 {
   Tensor* t = T_New(ctx, b->n, b->m);
   T_Scale_(t, a, b);
@@ -308,7 +308,7 @@ T_SPow_(Tensor* const t, const Tensor* const a, T_eltype b)
 }
 
 Tensor*
-T_SPow(SCORCH_CTX ctx, const Tensor* const a, T_eltype b)
+T_SPow(STORCH_CTX ctx, const Tensor* const a, T_eltype b)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_SPow_(t, a, b);
@@ -323,7 +323,7 @@ T_Pow_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 }
 
 Tensor*
-T_Pow(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
+T_Pow(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -341,7 +341,7 @@ T_Minus_(Tensor* const t, const Tensor* const a)
 }
 
 Tensor*
-T_Minus(SCORCH_CTX ctx, const Tensor* const a)
+T_Minus(STORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_Minus_(t, a);
@@ -357,7 +357,7 @@ T_Exp_(Tensor* const t, const Tensor* const a)
 }
 
 Tensor*
-T_Exp(SCORCH_CTX ctx, const Tensor* const a)
+T_Exp(STORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_Exp_(t, a);
@@ -373,7 +373,7 @@ T_Log_(Tensor* const t, const Tensor* const a)
 }
 
 Tensor*
-T_Log(SCORCH_CTX ctx, const Tensor* const a)
+T_Log(STORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_Log_(t, a);
@@ -407,7 +407,7 @@ T_GEMM_(Tensor* const t,
 }
 
 Tensor*
-T_MatMul(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
+T_MatMul(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   assert(a->m == b->n);
 
@@ -437,7 +437,7 @@ T_MatMul_(Tensor* const t, const Tensor* const a,const Tensor* const b)
 }
 
 Tensor*
-T_SumReduce(SCORCH_CTX ctx, const Tensor* const a)
+T_SumReduce(STORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, 1);
   T_SumReduce_(t, a);

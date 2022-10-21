@@ -1,10 +1,10 @@
 #include "arena.h"
 #include "graph.h"
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 #include <stdlib.h>
 
-struct scorch_ctx_s
+struct storch_ctx_s
 {
   GraphNode** g_arena;
   size_t g_len;
@@ -15,10 +15,10 @@ struct scorch_ctx_s
   size_t t_cap;
 };
 
-SCORCH_CTX
-SCORCH_CTX_New()
+STORCH_CTX
+STORCH_CTX_New()
 {
-  SCORCH_CTX ctx = malloc(sizeof(struct scorch_ctx_s));
+  STORCH_CTX ctx = malloc(sizeof(struct storch_ctx_s));
   ctx->g_arena = NULL;
   ctx->g_cap = 0;
   ctx->g_len = 0;
@@ -30,7 +30,7 @@ SCORCH_CTX_New()
   return ctx;
 }
 void*
-SCORCH_CTX_Destroy(SCORCH_CTX ctx)
+STORCH_CTX_Destroy(STORCH_CTX ctx)
 {
   while (ctx->g_len--)
     G_Destroy(ctx->g_arena[ctx->g_len]);
@@ -48,7 +48,7 @@ SCORCH_CTX_Destroy(SCORCH_CTX ctx)
 }
 
 GraphNode*
-G_Malloc(SCORCH_CTX ctx)
+G_Malloc(STORCH_CTX ctx)
 {
   GraphNode* g = malloc(sizeof *g);
   g->ctx = ctx;
@@ -67,7 +67,7 @@ G_Malloc(SCORCH_CTX ctx)
 }
 
 Tensor*
-T_Malloc(SCORCH_CTX ctx)
+T_Malloc(STORCH_CTX ctx)
 {
   Tensor* t = malloc(sizeof *t);
 

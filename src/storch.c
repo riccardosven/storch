@@ -1,6 +1,6 @@
-#include "scorch/scorch.h"
+#include "storch/storch.h"
 #include "graph.h"
-#include "scorch/tensor.h"
+#include "storch/tensor.h"
 
 #include <assert.h>
 #include <stdbool.h>

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "common.h"
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 
 int
 main(void)
@@ -13,7 +13,7 @@ main(void)
    * c = [1 -2 3]
    */
 
-  SCORCH_CTX ctx = SCORCH_CTX_New();
+  STORCH_CTX ctx = STORCH_CTX_New();
 
   T_eltype v_a[] = {1,3,5,2,4,6};
   T_eltype v_b[] = {0.7, 0.9};
@@ -50,7 +50,7 @@ main(void)
      almost_eq(grad(b)->data[0], 10.) &&
      almost_eq(grad(b)->data[1], 12.);
 
-  SCORCH_CTX_Destroy(ctx);
+  STORCH_CTX_Destroy(ctx);
 
   return retval ? EXIT_SUCCESS : EXIT_FAILURE;
 }

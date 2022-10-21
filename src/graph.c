@@ -4,10 +4,10 @@
 #include "arena.h"
 #include "graph.h"
 #include "ops.h"
-#include "scorch/scorch.h"
+#include "storch/storch.h"
 
 static GraphNode*
-G_New(SCORCH_CTX ctx, Op op, size_t arity)
+G_New(STORCH_CTX ctx, Op op, size_t arity)
 {
   GraphNode* v = G_Malloc(ctx);
 
@@ -35,7 +35,7 @@ G_Destroy(GraphNode* g)
 }
 
 GraphNode*
-G_Product(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
+G_Product(STORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
 
   GraphNode* v = G_New(ctx, PRODUCT, 2);
@@ -49,7 +49,7 @@ G_Product(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 }
 
 GraphNode*
-G_Value(SCORCH_CTX ctx, Tensor* x)
+G_Value(STORCH_CTX ctx, Tensor* x)
 {
 
   GraphNode* v = G_New(ctx, VALUE, 0);
@@ -59,7 +59,7 @@ G_Value(SCORCH_CTX ctx, Tensor* x)
 }
 
 GraphNode*
-G_Parameter(SCORCH_CTX ctx, Tensor* x)
+G_Parameter(STORCH_CTX ctx, Tensor* x)
 {
   GraphNode* v = G_New(ctx, PARAMETER, 0);
   v->t = x;
@@ -69,7 +69,7 @@ G_Parameter(SCORCH_CTX ctx, Tensor* x)
 }
 
 GraphNode*
-G_Sum(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
+G_Sum(STORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
 
   GraphNode* v = G_New(ctx, SUM, 2);
@@ -83,7 +83,7 @@ G_Sum(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 }
 
 GraphNode*
-G_Diff(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
+G_Diff(STORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
 
   GraphNode* v = G_New(ctx, DIFFERENCE, 2);
@@ -97,7 +97,7 @@ G_Diff(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 }
 
 GraphNode*
-G_Div(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
+G_Div(STORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
   GraphNode* v = G_New(ctx, DIVISION, 2);
 
@@ -110,7 +110,7 @@ G_Div(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 }
 
 GraphNode*
-G_Exp(SCORCH_CTX ctx, GraphNode* const x)
+G_Exp(STORCH_CTX ctx, GraphNode* const x)
 {
   GraphNode* v = G_New(ctx, EXPONENTIAL, 1);
 
@@ -122,7 +122,7 @@ G_Exp(SCORCH_CTX ctx, GraphNode* const x)
 }
 
 GraphNode*
-G_Log(SCORCH_CTX ctx, GraphNode* const x)
+G_Log(STORCH_CTX ctx, GraphNode* const x)
 {
   GraphNode* v = G_New(ctx, LOG, 1);
 
@@ -134,7 +134,7 @@ G_Log(SCORCH_CTX ctx, GraphNode* const x)
 }
 
 GraphNode*
-G_Pow(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
+G_Pow(STORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
   GraphNode* v = G_New(ctx, POWER, 2);
 
@@ -148,7 +148,7 @@ G_Pow(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 }
 
 GraphNode*
-G_Minus(SCORCH_CTX ctx, GraphNode* const x)
+G_Minus(STORCH_CTX ctx, GraphNode* const x)
 {
   GraphNode* v = G_New(ctx, MINUS, 1);
   v->operands[0] = x;
@@ -159,7 +159,7 @@ G_Minus(SCORCH_CTX ctx, GraphNode* const x)
 }
 
 GraphNode*
-G_MatMul(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
+G_MatMul(STORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 {
   GraphNode* v = G_New(ctx, MATMUL, 2);
   v->operands[0] = x;
@@ -172,7 +172,7 @@ G_MatMul(SCORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 }
 
 GraphNode*
-G_SumReduce(SCORCH_CTX ctx, GraphNode* const x)
+G_SumReduce(STORCH_CTX ctx, GraphNode* const x)
 {
   GraphNode* v = G_New(ctx, SUMREDUCE, 1);
   v->operands[0] = x;
@@ -185,7 +185,7 @@ G_SumReduce(SCORCH_CTX ctx, GraphNode* const x)
 
 /*
 GraphNode*
-G_MeanReduce(SCORCH_CTX, GraphNode* const x, )
+G_MeanReduce(STORCH_CTX, GraphNode* const x, )
 {
   GraphNode *v = G_New(ctx, MEANREDUCE, 1);
   v->operands[0] = x;

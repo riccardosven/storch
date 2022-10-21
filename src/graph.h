@@ -1,11 +1,11 @@
-#ifndef SCORCH_GRAPH_H
-#define SCORCH_GRAPH_H
+#ifndef STORCH_GRAPH_H
+#define STORCH_GRAPH_H
 
 #include <stdbool.h>
 
 #include "ops.h"
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 
 struct graphnode_s
 {
@@ -17,10 +17,10 @@ struct graphnode_s
   struct graphnode_s** operands;
   void (*forward_f)(struct graphnode_s*);
   void (*backward_f)(struct graphnode_s*);
-  SCORCH_CTX ctx;
+  STORCH_CTX ctx;
 };
 
 void*
 G_Destroy(GraphNode*);
 
-#endif // SCORCH_GRAPH_H
+#endif // STORCH_GRAPH_H

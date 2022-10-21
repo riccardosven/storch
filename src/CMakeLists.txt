@@ -1,10 +1,10 @@
-set(HEADER_LIST "${Scorch_SOURCE_DIR}/include/scorch/scorch.h")
+set(HEADER_LIST "${Storch_SOURCE_DIR}/include/storch/storch.h")
 
-add_library(scorch tensor.c arena.c ops.c graph.c scorch.c ${HEADER_LIST})
+add_library(storch tensor.c arena.c ops.c graph.c storch.c ${HEADER_LIST})
 
-target_include_directories(scorch PUBLIC ../include)
+target_include_directories(storch PUBLIC ../include)
 
-target_link_libraries(scorch PRIVATE m cblas)
+target_link_libraries(storch PRIVATE m cblas)
 
 source_group(
     TREE "${PROJECT_SOURCE_DIR}/include"
@@ -16,5 +16,5 @@ clangformat_setup(
     graph.h
     ops.c
     ops.h
-    scorch.c
+    storch.c
     )

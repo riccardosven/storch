@@ -1,21 +1,21 @@
-#ifndef SCORCH_ARENA_H
-#define SCORCH_ARENA_H
+#ifndef STORCH_ARENA_H
+#define STORCH_ARENA_H
 
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 
-typedef struct scorch_ctx_s* SCORCH_CTX;
+typedef struct storch_ctx_s* STORCH_CTX;
 
-SCORCH_CTX
-SCORCH_CTX_New();
+STORCH_CTX
+STORCH_CTX_New();
 
 void*
-SCORCH_CTX_Destroy(SCORCH_CTX ctx);
+STORCH_CTX_Destroy(STORCH_CTX ctx);
 
 GraphNode*
-G_Malloc(SCORCH_CTX ctx);
+G_Malloc(STORCH_CTX ctx);
 
 Tensor*
-T_Malloc(SCORCH_CTX ctx);
+T_Malloc(STORCH_CTX ctx);
 
-#endif // SCORCH_ARENA_H
+#endif // STORCH_ARENA_H

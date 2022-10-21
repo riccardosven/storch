@@ -1,17 +1,17 @@
 /** @file
  * Library of tensor operations.
  *
- * In Scorch, tensors are limited to two-dimensional data structures (think: matrices).
+ * In Storch, tensors are limited to two-dimensional data structures (think: matrices).
  * This library contains the basic mathematical operations on tensors.
  *
- * @note Tensors are dynamically allocated either on the stack or in a `SCORCH_CTX`.
+ * @note Tensors are dynamically allocated either on the stack or in a `STORCH_CTX`.
  * @note Many operations use numpy-style broadcasting of unitary dimensions.
  *
  */
-#ifndef SCORCH_TENSOR_H
-#define SCORCH_TENSOR_H
+#ifndef STORCH_TENSOR_H
+#define STORCH_TENSOR_H
 
-#include "scorch/scorch.h"
+#include "storch/storch.h"
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -21,7 +21,7 @@ typedef double T_eltype; /**< Type of tensor elements. */
  *
  * Wraps a contiguous segment of memory into a two-dimensional tensor in column-major order.
  */
-typedef struct scorch_tensor_s
+typedef struct storch_tensor_s
 {
   size_t n; /**< Number of rows */
   size_t m; /**< Number of columns */
@@ -30,7 +30,7 @@ typedef struct scorch_tensor_s
 
 /** Find the number of elements of a tensor
  *
- * @param t[in] input tensor.
+ * @param[in] t input tensor.
  *
  * @returns The number of elements (#rows times #columns);
  */
@@ -40,9 +40,9 @@ T_nelems(const Tensor* const t);
 /**
  * Create a new tensor.
  *
- * @param ctx[in] Optional Scorch context.
- * @param n[in] Number of rows.
- * @param m[in] Number of columns.
+ * @param[in] ctx Optional Storch context.
+ * @param[in] n Number of rows.
+ * @param[in] m Number of columns.
  *
  * @returns A pointer to the allocated tensor.
  *
@@ -51,14 +51,14 @@ T_nelems(const Tensor* const t);
  * @see T_Destroy
  */
 Tensor*
-T_New(SCORCH_CTX ctx, size_t n, size_t m);
+T_New(STORCH_CTX ctx, size_t n, size_t m);
 
 /**
  * Create a new zero-initialized tensor.
  *
- * @param ctx[in] Optional Scorch context.
- * @param n[in] Number of rows.
- * @param m[in] Number of columns.
+ * @param[in] ctx Optional Storch context.
+ * @param[in] n Number of rows.
+ * @param[in] m Number of columns.
  *
  * @returns A pointer to the allocated tensor.
  *
@@ -66,14 +66,14 @@ T_New(SCORCH_CTX ctx, size_t n, size_t m);
  *
  */
 Tensor*
-T_Zeros(SCORCH_CTX, size_t, size_t);
+T_Zeros(STORCH_CTX, size_t, size_t);
 
 /**
  * Create a new tensor filled with ones.
  *
- * @param ctx[in] Optional Scorch context.
- * @param n[in] Number of rows.
- * @param m[in] Number of columns.
+ * @param[in] ctx Optional Storch context.
+ * @param[in] n Number of rows.
+ * @param[in] m Number of columns.
  *
  * @returns A pointer to the allocated tensor.
  *
@@ -81,13 +81,13 @@ T_Zeros(SCORCH_CTX, size_t, size_t);
  *
  */
 Tensor*
-T_Ones(SCORCH_CTX, size_t, size_t);
+T_Ones(STORCH_CTX, size_t, size_t);
 
 /**
  * Create a new zero-initialized tensor with the same shape as the given tensor.
  *
- * @param ctx[in] Optional Scorch context.
- * @param t[in] Reference tensor.
+ * @param[in] ctx Optional Storch context.
+ * @param[in] t Reference tensor.
  *
  * @returns A pointer to the allocated tensor.
  *
@@ -95,13 +95,13 @@ T_Ones(SCORCH_CTX, size_t, size_t);
  *
  */
 Tensor*
-T_ZerosLike(SCORCH_CTX, const Tensor* const t);
+T_ZerosLike(STORCH_CTX, const Tensor* const t);
 
 /**
  * Create a new one-initialized tensor with the same shape as the given tensor.
  *
- * @param ctx[in] Optional Scorch context.
- * @param t[in] Reference tensor.
+ * @param[in] ctx Optional Storch context.
+ * @param[in] t Reference tensor.
  *
  * @returns A pointer to the allocated tensor.
  *
@@ -109,16 +109,16 @@ T_ZerosLike(SCORCH_CTX, const Tensor* const t);
  *
  */
 Tensor*
-T_OnesLike(SCORCH_CTX, const Tensor* const t);
+T_OnesLike(STORCH_CTX, const Tensor* const t);
 
 /**
  * Destroy the given tensor and deallocate the memory; returns a `NULL` pointer.
  *
- * @param t[in] Pointer to the tensor to deallocate.
+ * @param[in] t Pointer to the tensor to deallocate.
  *
  * @returns `NULL` pointer.
  *
- * @note Do not use on Tensors allocated in a `SCORCH_CTX`!
+ * @note Do not use on Tensors allocated in a `STORCH_CTX`!
  *
  */
 void*
@@ -127,7 +127,7 @@ T_Destroy(Tensor* t);
 /**
  * Create a new `n` times `m` initialized with `data`.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] n Number of rows.
  * @param[in] m Number of columns.
  * @param[in] data Initialization data in column-major order.
@@ -135,23 +135,23 @@ T_Destroy(Tensor* t);
  * @returns A pointer to the allocated tesor.
  */
 Tensor*
-T_Wrap(SCORCH_CTX ctx, size_t n, size_t m, T_eltype data[static n*m]);
+T_Wrap(STORCH_CTX ctx, size_t n, size_t m, T_eltype data[static n*m]);
 
 /**
  * Create a new 1 by 1 tensor.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] d Value of the scalar tensor.
  *
  * @returns A pointer to the allocated tesor.
  */
 Tensor*
-T_Scalar(SCORCH_CTX, T_eltype);
+T_Scalar(STORCH_CTX, T_eltype);
 
 /**
  * Create a new `n` times `m` tensor where all the entries are equal to `d`.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] n Number of rows.
  * @param[in] m Number of columns.
  * @param[in] d Value to fill with.
@@ -159,24 +159,24 @@ T_Scalar(SCORCH_CTX, T_eltype);
  * @returns A pointer to the allocated tesor.
  */
 Tensor*
-T_Full(SCORCH_CTX ctx, size_t n, size_t m, T_eltype d);
+T_Full(STORCH_CTX ctx, size_t n, size_t m, T_eltype d);
 
 /**
  * Create a new tensor with the same shape as `t` where all the entries are equal to `d`.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] t Tensor whose shape is copied.
  * @param[in] d Value to fill with.
  *
  * @returns A pointer to the allocated tesor.
  */
 Tensor*
-T_FullLike(SCORCH_CTX ctx, const Tensor* const t, T_eltype d);
+T_FullLike(STORCH_CTX ctx, const Tensor* const t, T_eltype d);
 
 /**
  * Copy the given tensor `t`.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] t Tensor to copy
  *
  * @returns A pointer to the allocated tesor.
@@ -184,12 +184,12 @@ T_FullLike(SCORCH_CTX ctx, const Tensor* const t, T_eltype d);
  * @note Allocates a new tensor; appropriate destruction is required.
  */
 Tensor*
-T_Copy(SCORCH_CTX ctx, const Tensor* const t);
+T_Copy(STORCH_CTX ctx, const Tensor* const t);
 
 /**
  * In-place copy of a tensor: `t=a`.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[out] t Tensor to copy to.
  * @param[in] a Tensor to copy.
  *
@@ -225,7 +225,7 @@ T_SetItem(Tensor* const t, size_t i , size_t j, T_eltype d);
 /**
  * Element-wise tensor addition.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a First tensor.
  * @param[in] b Second tensor.
  *
@@ -233,7 +233,7 @@ T_SetItem(Tensor* const t, size_t i , size_t j, T_eltype d);
  *
  */
 Tensor*
-T_Sum(SCORCH_CTX ctx , const Tensor* const a, const Tensor* const b);
+T_Sum(STORCH_CTX ctx , const Tensor* const a, const Tensor* const b);
 
 /**
  * In-place the element-wise tensor addition: `t = a + b`.
@@ -249,7 +249,7 @@ T_Sum_(Tensor* const t, const Tensor* const a, const Tensor* const b);
 /**
  * Element-wise tensor difference.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a First tensor.
  * @param[in] b Second tensor.
  *
@@ -257,7 +257,7 @@ T_Sum_(Tensor* const t, const Tensor* const a, const Tensor* const b);
  *
  */
 Tensor*
-T_Diff(SCORCH_CTX, const Tensor* const a, const Tensor* const b);
+T_Diff(STORCH_CTX, const Tensor* const a, const Tensor* const b);
 
 /**
  * In-place the element-wise tensor difference: `t = a - b`.
@@ -293,7 +293,7 @@ T_Add_(Tensor* const t, const Tensor* const a);
 /**
  * Element-wise tensor multiplication.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a First tensor.
  * @param[in] b Second tensor.
  *
@@ -301,7 +301,7 @@ T_Add_(Tensor* const t, const Tensor* const a);
  *
  */
 Tensor*
-T_Mul(SCORCH_CTX, const Tensor* const a, const Tensor* const b);
+T_Mul(STORCH_CTX, const Tensor* const a, const Tensor* const b);
 
 
 /**
@@ -318,7 +318,7 @@ T_Mul_(Tensor* const t, const Tensor* const a, const Tensor* const b);
 /**
  * Element-wise tensor division.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a First tensor.
  * @param[in] b Second tensor.
  *
@@ -326,7 +326,7 @@ T_Mul_(Tensor* const t, const Tensor* const a, const Tensor* const b);
  *
  */
 Tensor*
-T_Div(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b);
+T_Div(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b);
 
 /**
  * In-place the element-wise tensor division: `t = a / b`.
@@ -343,7 +343,7 @@ T_Div_(Tensor* const t, const Tensor* const a, const Tensor* const b);
 /**
  * Element-wise tensor scaling.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] alpha The scaling factor.
  * @param[in] a The tensor to scale.
  *
@@ -351,7 +351,7 @@ T_Div_(Tensor* const t, const Tensor* const a, const Tensor* const b);
  *
  */
 Tensor*
-T_Scale(SCORCH_CTX ctx, T_eltype alpha, const Tensor* const a);
+T_Scale(STORCH_CTX ctx, T_eltype alpha, const Tensor* const a);
 
 /**
  * In-place element-wise tensor scaling: `t = alpha * a`.
@@ -367,7 +367,7 @@ T_Scale_(Tensor* const t, T_eltype alpha , const Tensor* const a);
 /**
  * Element-wise tensor powering.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a The input tensor.
  * @param[in] e The exponent
  *
@@ -375,7 +375,7 @@ T_Scale_(Tensor* const t, T_eltype alpha , const Tensor* const a);
  *
  */
 Tensor*
-T_SPow(SCORCH_CTX cxt, const Tensor* const a , T_eltype e);
+T_SPow(STORCH_CTX cxt, const Tensor* const a , T_eltype e);
 
 /**
  * In-place element-wise tensor powering: `t = a ** e`.
@@ -390,7 +390,7 @@ T_SPow_(Tensor* const t, const Tensor* const a, T_eltype e);
 
 /**
  * Element-wise broadcasting tensor powering.
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a The input tensor.
  * @param[in] e The exponent tensor.
  *
@@ -398,7 +398,7 @@ T_SPow_(Tensor* const t, const Tensor* const a, T_eltype e);
  *
  */
 Tensor*
-T_Pow(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b);
+T_Pow(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b);
 
 /**
  * In-place element-wise broadcasting tensor powering: `t=a**e`.
@@ -413,14 +413,14 @@ T_Pow_(Tensor* const t, const Tensor* const a, const Tensor* const b);
 /**
  * Element-wise tensor exponential.
  * 
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a The input tensor.
  *
  * @returns A pointer to `exp(a)`.
  *
  */
 Tensor*
-T_Exp(SCORCH_CTX ctx, const Tensor* const a);
+T_Exp(STORCH_CTX ctx, const Tensor* const a);
 
 /**
  * In-place element-wise tensor exponential: `t=exp(a)`.
@@ -435,14 +435,14 @@ T_Exp_(Tensor* const t, const Tensor* const a);
 /**
  * Element-wise tensor natural logarithm.
  * 
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a The input tensor.
  *
  * @returns A pointer to `log(a)`.
  *
  */
 Tensor*
-T_Log(SCORCH_CTX ctx, const Tensor* const a);
+T_Log(STORCH_CTX ctx, const Tensor* const a);
 
 /**
  * In-place element-wise tensor natural logarith: `t=log(a)`.
@@ -457,14 +457,14 @@ T_Log_(Tensor* const t, const Tensor* const a);
 /**
  * Tensor unitary negation.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a The input tensor.
  *
  * @returns A pointer to `-a`.
  *
  */
 Tensor*
-T_Minus(SCORCH_CTX ctx, const Tensor* const a);
+T_Minus(STORCH_CTX ctx, const Tensor* const a);
 
 /**
  * In-place tensor unitary negation: `t=-a`.
@@ -495,7 +495,7 @@ T_GEMM_(Tensor* const t, const Tensor* const a, bool transpose_a, const Tensor* 
 /**
  * Matrix multiplication.
  *
- * @param[in] ctx: Optional  Scorch context.
+ * @param[in] ctx: Optional  Storch context.
  * @param[in] a First operand.
  * @param[in] b Second operand.
  *
@@ -503,7 +503,7 @@ T_GEMM_(Tensor* const t, const Tensor* const a, bool transpose_a, const Tensor* 
  *
  */
 Tensor*
-T_MatMul(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b);
+T_MatMul(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b);
 
 /**
  * In-place matrix multiplication: `t=a@b`.
@@ -519,14 +519,14 @@ T_MatMul_(Tensor* const t, const Tensor* const a, const Tensor* const b);
 /**
  * Tensor column reduction operation.
  *
- * @param[in] ctx Optional Scorch context.
+ * @param[in] ctx Optional Storch context.
  * @param[in] a Operand.
  *
  * @returns a pointer to a column tensor `t` where `t[i] = sum(a[i, j] for all j)`.
  *
  */
 Tensor*
-T_SumReduce(SCORCH_CTX ctx, const Tensor* const a);
+T_SumReduce(STORCH_CTX ctx, const Tensor* const a);
 
 /**
  * In-place tensor column reduction operation: `t[i] = sum(a[i, j] for all j)`.
@@ -538,4 +538,4 @@ T_SumReduce(SCORCH_CTX ctx, const Tensor* const a);
 void
 T_SumReduce_(Tensor* restrict const t, const Tensor* restrict const a);
 
-#endif // SCORCH_TENSOR_H
+#endif // STORCH_TENSOR_H

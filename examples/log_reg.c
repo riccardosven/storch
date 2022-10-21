@@ -1,12 +1,12 @@
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 
 GraphNode*
-G_LogSumExp(SCORCH_CTX ctx, GraphNode * x) {
+G_LogSumExp(STORCH_CTX ctx, GraphNode * x) {
   GraphNode* ones = G_Value(ctx, T_Ones(ctx, 3, 3));
 
   return G_Log(ctx, G_MatMul(ctx, ones, G_Exp(ctx, x)));
@@ -14,7 +14,7 @@ G_LogSumExp(SCORCH_CTX ctx, GraphNode * x) {
 
 
 GraphNode*
-modelForward(SCORCH_CTX ctx, GraphNode *x, GraphNode* w, GraphNode* b) {
+modelForward(STORCH_CTX ctx, GraphNode *x, GraphNode* w, GraphNode* b) {
 
   GraphNode *s = G_Sum(ctx,
         G_MatMul(ctx, w, x),
@@ -36,7 +36,7 @@ trainLoop(Dataset d, Tensor *w_v, Tensor *b_v)
 {
 
   for (size_t epoch = 0; epoch < 500; epoch++) {
-    SCORCH_CTX ctx = SCORCH_CTX_New();
+    STORCH_CTX ctx = STORCH_CTX_New();
     GraphNode *w = G_Parameter(ctx, w_v);
     GraphNode *b = G_Parameter(ctx, b_v);
 
@@ -63,7 +63,7 @@ trainLoop(Dataset d, Tensor *w_v, Tensor *b_v)
     T_Scale_(grad(b), 0.005, grad(b));
     T_Add_(value(b), grad(b));
 
-    SCORCH_CTX_Destroy(ctx);
+    STORCH_CTX_Destroy(ctx);
   }
 
 }

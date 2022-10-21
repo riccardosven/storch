@@ -1,6 +1,6 @@
 
-#include  "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include  "storch/storch.h"
+#include "storch/tensor.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -11,7 +11,7 @@ getMean(size_t N, T_eltype data[static N])
   Tensor *m_t = T_Scalar(NULL, 15.0);
 
   for (size_t epoch=0; epoch<20; epoch++) {
-    SCORCH_CTX ctx = SCORCH_CTX_New();
+    STORCH_CTX ctx = STORCH_CTX_New();
 
     GraphNode *m = G_Parameter(ctx, m_t);
     GraphNode* t = G_Value(ctx, T_Zeros(ctx, 1,1));
@@ -36,7 +36,7 @@ getMean(size_t N, T_eltype data[static N])
     Tensor* d = T_Scale(ctx, 0.05, grad(m));
     T_Sub_(m_t, d);
 
-    SCORCH_CTX_Destroy(ctx);
+    STORCH_CTX_Destroy(ctx);
   }
   printf("MEAN: %f\n",  m_t->data[0]);
   T_Destroy(m_t);

@@ -1,12 +1,12 @@
 #include "common.h"
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 
 int
 main(void)
 {
 
-  SCORCH_CTX ctx = SCORCH_CTX_New();
+  STORCH_CTX ctx = STORCH_CTX_New();
 
   T_eltype x_t[] = {1, 2, 3, 4};
 
@@ -22,7 +22,7 @@ main(void)
   retval += check_almost_eq(grad(p)->data[2], 1);
   retval += check_almost_eq(grad(p)->data[3], 1);
 
-  SCORCH_CTX_Destroy(ctx);
+  STORCH_CTX_Destroy(ctx);
 
   return retval;
 }

@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 
 
 GraphNode *
-objectiveFunction(SCORCH_CTX ctx, GraphNode * x)
+objectiveFunction(STORCH_CTX ctx, GraphNode * x)
 {
   T_eltype tgt[] = {0.3, -1.2};
   GraphNode* x_t = G_Value(ctx, T_Wrap(ctx, 2,1, tgt));
@@ -26,7 +26,7 @@ optimize(Tensor *x_v, size_t n_epochs)
 {
   while (--n_epochs)
   {
-    SCORCH_CTX ctx = SCORCH_CTX_New();
+    STORCH_CTX ctx = STORCH_CTX_New();
     GraphNode *x = G_Parameter(ctx, x_v);
     GraphNode *loss = objectiveFunction(ctx, x);
 
@@ -39,7 +39,7 @@ optimize(Tensor *x_v, size_t n_epochs)
 
     printf("x:[% 2.2f % 2.2f] f(x):% 3.4f\n", x_v->data[0], x_v->data[1], value(loss)->data[0]);
 
-    SCORCH_CTX_Destroy(ctx);
+    STORCH_CTX_Destroy(ctx);
   }
 
 }

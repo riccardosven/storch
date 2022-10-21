@@ -1,7 +1,7 @@
-#ifndef SCORCH_OPS_H
-#define SCORCH_OPS_H
+#ifndef STORCH_OPS_H
+#define STORCH_OPS_H
 
-#include "scorch/scorch.h"
+#include "storch/storch.h"
 
 typedef enum
 {
@@ -82,4 +82,4 @@ G_SumReduce_Forward(GraphNode* x);
 void
 G_SumReduce_Backward(GraphNode* x);
 
-#endif // SCORCH_OPS_H
+#endif // STORCH_OPS_H

@@ -1,15 +1,15 @@
 #include <tgmath.h>
 
 #include "common.h"
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 
 int
 integration_1(void)
 {
   /* g = x^2 * y + 15*x*y + 3/x */
 
-  SCORCH_CTX ctx = SCORCH_CTX_New();
+  STORCH_CTX ctx = STORCH_CTX_New();
 
   T_eltype x_v = 1.51;
   T_eltype y_v = 2.192;
@@ -37,7 +37,7 @@ integration_1(void)
                                pow(x_v, 2) * y_v + 15 * x_v * y_v + 3 / x_v);
   retval += check_almost_eq(grad(x)->data[0],
                             2 * x_v * y_v + 15 * y_v - 3 / pow(x_v, 2));
-  SCORCH_CTX_Destroy(ctx);
+  STORCH_CTX_Destroy(ctx);
 
   return retval;
 }
@@ -46,7 +46,7 @@ int
 integration_2(void)
 {
   /* g = 1/(1 + exp(x)) */
-  SCORCH_CTX ctx = SCORCH_CTX_New();
+  STORCH_CTX ctx = STORCH_CTX_New();
 
   T_eltype x_v = 0.84;
   Tensor* t_x = T_Scalar(ctx, x_v);
@@ -67,7 +67,7 @@ integration_2(void)
   int retval = check_almost_eq(value(g)->data[0], sigma);
   retval += check_almost_eq(grad(x)->data[0], sigma * (1 - sigma));
 
-  SCORCH_CTX_Destroy(ctx);
+  STORCH_CTX_Destroy(ctx);
 
   return retval;
 }
@@ -77,7 +77,7 @@ integration_3(void)
 {
 
   /* g = a * (x + b * c) */
-  SCORCH_CTX ctx = SCORCH_CTX_New();
+  STORCH_CTX ctx = STORCH_CTX_New();
 
   T_eltype x_v = 0.88;
 
@@ -97,7 +97,7 @@ integration_3(void)
 
   int retval = check_almost_eq(grad(x)->data[0], a_v);
 
-  SCORCH_CTX_Destroy(ctx);
+  STORCH_CTX_Destroy(ctx);
 
   return retval;
 }
@@ -106,7 +106,7 @@ int
 integration_4(void)
 {
     /* g = sum_i ( (x_i + i)**2) */
-    SCORCH_CTX ctx = SCORCH_CTX_New();
+    STORCH_CTX ctx = STORCH_CTX_New();
     /* 0.5  1.1 -0.7
      * 0.7 -0.2  4.4
      */
@@ -143,7 +143,7 @@ integration_4(void)
     retval += check_almost_eq(grad(x)->data[5], 14.8);
 
 
-  SCORCH_CTX_Destroy(ctx);
+  STORCH_CTX_Destroy(ctx);
 
     return retval;
 }

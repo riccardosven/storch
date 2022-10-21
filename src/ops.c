@@ -3,8 +3,8 @@
 
 #include "graph.h"
 #include "ops.h"
-#include "scorch/scorch.h"
-#include "scorch/tensor.h"
+#include "storch/storch.h"
+#include "storch/tensor.h"
 
 void
 G_Product_Forward(GraphNode* x)
