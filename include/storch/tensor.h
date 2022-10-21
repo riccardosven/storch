@@ -127,17 +127,32 @@ void*
 T_Destroy(Tensor* t);
 
 /**
- * Create a new `n` times `m` initialized with `data`.
+ * Create a new `n` times `m` tensor initialized with `data`.
  *
  * @param[in] ctx Optional Storch context.
  * @param[in] n Number of rows.
  * @param[in] m Number of columns.
  * @param[in] data Initialization data in column-major order.
  *
- * @returns A pointer to the allocated tesor.
+ * @returns A pointer to the allocated tensor.
+ *
  */
 Tensor*
 T_Wrap(STORCH_CTX ctx, size_t n, size_t m, T_eltype data[static n*m]);
+
+/**
+ * Build a new `n` times `m` tensor with direct arguments.
+ *
+ * @param[in] ctx Optional Storch context.
+ * @param[in] n Number of rows.
+ * @param[in] N Number of initialization data.
+ * @param[in] data data for initialization.
+ *
+ * @returns A pointer to the allocated tensor.
+ * 
+ */
+Tensor*
+T_Build(STORCH_CTX ctx, size_t n, size_t N, ...);
 
 /**
  * Create a new 1 by 1 tensor.
