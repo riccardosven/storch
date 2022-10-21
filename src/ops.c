@@ -138,12 +138,12 @@ G_Pow_Backward(GraphNode* x)
   assert(x->arity == 2);
 
   Tensor* b = T_Copy(NULL, value(x->operands[1]));
-  Tensor* o = T_OnesLike(NULL, b);
+  Tensor* o = T_Scalar(NULL, 1);
 
-  T_Diff_(o, b, o);
+  Tensor* bm = T_Diff(NULL, b, o);
 
   // x->operands[0]->g += x->g * b * pow(a, b-1);
-  Tensor* a = T_Pow(NULL, value(x->operands[0]), o);
+  Tensor* a = T_Pow(NULL, value(x->operands[0]), bm);
   T_Mul_(a, b, a);
   T_Mul_(a, grad(x), a);
   T_Add_(grad(x->operands[0]), a);

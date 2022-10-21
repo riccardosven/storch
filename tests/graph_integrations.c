@@ -148,6 +148,22 @@ integration_4(void)
     return retval;
 }
 
+int
+integration_5(void)
+{
+    /* g = [x 0] ( [x y] ** [a ; b] ) [y ; y] */
+    /* g = x**(a + 1) y + x  y **(a+1) */
+
+    STORCH_CTX ctx = STORCH_CTX_New();
+
+    T_eltype x = 0.13;
+    T_eltype a = 1.2;
+
+    GraphNode *v = G_Parameter(ctx, T_Zeros(ctx, 1, 2))
+
+
+}
+
 
 int
 main(void)
