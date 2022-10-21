@@ -8,10 +8,10 @@ int
 main(void)
 {
   T_eltype va[] = { 1, 2, 3, 4, 5, 6 };
-  Tensor* a = T_Wrap(NULL,3, 2, va);
+  Tensor* a = T_Wrap(NULL, 3, 2, va);
 
   T_eltype vb[] = { 3, 2, 0, 7, -3, -2 };
-  Tensor* b = T_Wrap(NULL,2, 3, vb);
+  Tensor* b = T_Wrap(NULL, 2, 3, vb);
 
   /* s = a@b
    * a = [1 4]  b = [3 0 -3]
@@ -21,16 +21,9 @@ main(void)
 
   Tensor* s = T_MatMul(NULL, a, b);
 
-  T_eltype vc[] = {
-    1*3 + 4*2,
-    2*3 + 5*2,
-    3*3 + 6*2,
-    1*0 + 4*7,
-    2*0 + 5*7,
-    3*0 + 6*7,
-    -1*3 - 4*2,
-    -2*3 - 5*2,
-    -3*3 - 6*2};
+  T_eltype vc[] = { 1 * 3 + 4 * 2,  2 * 3 + 5 * 2,  3 * 3 + 6 * 2,
+                    1 * 0 + 4 * 7,  2 * 0 + 5 * 7,  3 * 0 + 6 * 7,
+                    -1 * 3 - 4 * 2, -2 * 3 - 5 * 2, -3 * 3 - 6 * 2 };
 
   int retval = 1;
   for (size_t i = 0; i < T_nelems(s); i++) {

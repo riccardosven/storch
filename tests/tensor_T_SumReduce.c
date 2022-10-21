@@ -1,8 +1,8 @@
 #include "common.h"
 #include "storch/storch.h"
 #include "storch/tensor.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int
 main(void)
@@ -14,9 +14,10 @@ main(void)
 
   Tensor* s = T_SumReduce(NULL, t);
 
-  T_eltype e[] = {-1, 12};
+  T_eltype e[] = { -1, 12 };
 
-  int retval = check_almost_eq(s->data[0], e[0]) + check_almost_eq(s->data[1], e[1]);
+  int retval =
+    check_almost_eq(s->data[0], e[0]) + check_almost_eq(s->data[1], e[1]);
 
   T_Destroy(t);
   T_Destroy(s);

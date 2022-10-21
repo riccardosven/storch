@@ -18,7 +18,7 @@ integration_1(void)
   Tensor* t_y = T_Scalar(ctx, y_v);
   Tensor* t_2 = T_Scalar(ctx, 2);
   Tensor* t_3 = T_Scalar(ctx, 3);
-  Tensor* t_15 = T_Scalar(ctx,15);
+  Tensor* t_15 = T_Scalar(ctx, 15);
 
   GraphNode* x = G_Parameter(ctx, t_x);
   GraphNode* y = G_Parameter(ctx, t_y);
@@ -105,47 +105,42 @@ integration_3(void)
 int
 integration_4(void)
 {
-    /* g = sum_i ( (x_i + i)**2) */
-    STORCH_CTX ctx = STORCH_CTX_New();
-    /* 0.5  1.1 -0.7
-     * 0.7 -0.2  4.4
-     */
+  /* g = sum_i ( (x_i + i)**2) */
+  STORCH_CTX ctx = STORCH_CTX_New();
+  /* 0.5  1.1 -0.7
+   * 0.7 -0.2  4.4
+   */
 
-    T_eltype b_v[] = {1, 1, 2, 2, 3, 3};
+  T_eltype b_v[] = { 1, 1, 2, 2, 3, 3 };
 
-    T_eltype x_v[] = {0.5, 0.7, 1.1, -0.2, -0.7, 4.4};
+  T_eltype x_v[] = { 0.5, 0.7, 1.1, -0.2, -0.7, 4.4 };
 
-    GraphNode* x = G_Parameter(ctx, T_Wrap(ctx, 2, 3, x_v));
-    GraphNode* bias = G_Value(ctx, T_Wrap(ctx, 2, 3, b_v));
+  GraphNode* x = G_Parameter(ctx, T_Wrap(ctx, 2, 3, x_v));
+  GraphNode* bias = G_Value(ctx, T_Wrap(ctx, 2, 3, b_v));
 
-    GraphNode* g = G_SumReduce(ctx, 
-            G_Pow(ctx,
-            G_Sum(ctx, x, bias),
-            G_Value(ctx, T_Full(ctx, 2, 3, 2.0))
-            )
-            );
+  GraphNode* g = G_SumReduce(
+    ctx, G_Pow(ctx, G_Sum(ctx, x, bias), G_Value(ctx, T_Full(ctx, 2, 3, 2.0))));
 
-    forward(g);
-    backward(g);
+  forward(g);
+  backward(g);
 
-    print(value(x));
-    printf("grad\n");
-    print(grad(x));
+  print(value(x));
+  printf("grad\n");
+  print(grad(x));
 
-    int retval = check_almost_eq(value(g)->data[0], 17.15) + check_almost_eq(value(g)->data[1], 60.89);
+  int retval = check_almost_eq(value(g)->data[0], 17.15) +
+               check_almost_eq(value(g)->data[1], 60.89);
 
-
-    retval += check_almost_eq(grad(x)->data[0], 3.0);
-    retval += check_almost_eq(grad(x)->data[1], 3.4);
-    retval += check_almost_eq(grad(x)->data[2], 6.2);
-    retval += check_almost_eq(grad(x)->data[3], 3.6);
-    retval += check_almost_eq(grad(x)->data[4], 4.6);
-    retval += check_almost_eq(grad(x)->data[5], 14.8);
-
+  retval += check_almost_eq(grad(x)->data[0], 3.0);
+  retval += check_almost_eq(grad(x)->data[1], 3.4);
+  retval += check_almost_eq(grad(x)->data[2], 6.2);
+  retval += check_almost_eq(grad(x)->data[3], 3.6);
+  retval += check_almost_eq(grad(x)->data[4], 4.6);
+  retval += check_almost_eq(grad(x)->data[5], 14.8);
 
   STORCH_CTX_Destroy(ctx);
 
-    return retval;
+  return retval;
 }
 
 int
@@ -157,10 +152,21 @@ integration_5(void)
     STORCH_CTX ctx = STORCH_CTX_New();
 
     T_eltype x = 0.13;
+    T_eltype y = -0.52;
     T_eltype a = 1.2;
 
-    GraphNode *v = G_Parameter(ctx, T_Zeros(ctx, 1, 2))
+    GraphNode *g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, x, 0));
+    GraphNode *g2 = G_Parameter(ctx, T_Build(ctx, 1, 2, x, y));
+    GraphNode *g3 = G_Parameter(ctx, T_Build(ctx, 2, 2, a, b));
+    GraphNode *g4 = G_Parameter(ctx, T_Build(ctx, 2, 2, y, y));
 
+    GraphNode *y = T_MatMul(ctx, T_MatMul(ctx, g1, T_Pow(ctx, g2, g3)) g4);
+
+    T_print(value(y));
+
+    STORCH_CTX_Destroy(ctx);
+
+    return 1;
 
 }
 
@@ -168,5 +174,5 @@ integration_5(void)
 int
 main(void)
 {
-  return integration_1() + integration_2() + integration_3() + integration_4();
+  return integration_1() + integration_2() + integration_3() + integration_4() + integration_5;
 }

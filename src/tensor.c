@@ -3,6 +3,7 @@
 #include "storch/storch.h"
 #include <assert.h>
 #include <cblas.h>
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <tgmath.h>
@@ -103,6 +104,25 @@ T_New(STORCH_CTX ctx, size_t n, size_t m)
   t->n = n;
   t->m = m;
   t->data = malloc(sizeof(T_eltype) * n * m);
+
+  return t;
+}
+
+Tensor*
+T_Build(STORCH_CTX ctx, size_t n, size_t N, ...)
+{
+
+  Tensor* t = T_New(ctx, n, N / n);
+
+  va_list valist;
+
+  va_start(valist, N);
+
+  for (size_t i = 0; i < N; i++) {
+    t->data[i] = va_arg(valist, T_eltype);
+  }
+
+  va_end(valist);
 
   return t;
 }
