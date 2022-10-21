@@ -3,9 +3,9 @@
 #include "storch/storch.h"
 #include <assert.h>
 #include <cblas.h>
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <tgmath.h>
 
 #define check_sizes(t, a, b)                                                   \
@@ -112,19 +112,19 @@ Tensor*
 T_Build(STORCH_CTX ctx, size_t n, size_t N, ...)
 {
 
-    Tensor *t = T_New(ctx, n, N/n);
+  Tensor* t = T_New(ctx, n, N / n);
 
-    va_list valist;
+  va_list valist;
 
-    va_start(valist, N);
+  va_start(valist, N);
 
-    for (size_t i = 0; i < N; i++) {
-        t->data[i] = va_arg(valist, T_eltype);
-    }
+  for (size_t i = 0; i < N; i++) {
+    t->data[i] = va_arg(valist, T_eltype);
+  }
 
-    va_end(valist);
+  va_end(valist);
 
-    return t;
+  return t;
 }
 
 Tensor*

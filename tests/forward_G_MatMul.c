@@ -1,7 +1,7 @@
 #include "common.h"
-#include <stdlib.h>
 #include "storch/storch.h"
 #include "storch/tensor.h"
+#include <stdlib.h>
 
 int
 main(void)
@@ -14,8 +14,8 @@ main(void)
 
   STORCH_CTX ctx = STORCH_CTX_New();
 
-  T_eltype v_a[] = {1,-2,-3,4,-5,6};
-  T_eltype v_b[] = {0.1, 0.2, 0.3, 0.4};
+  T_eltype v_a[] = { 1, -2, -3, 4, -5, 6 };
+  T_eltype v_b[] = { 0.1, 0.2, 0.3, 0.4 };
 
   Tensor* t_a = T_Wrap(ctx, 3, 2, v_a);
   Tensor* t_b = T_Wrap(ctx, 2, 2, v_b);
@@ -25,15 +25,12 @@ main(void)
   forward(g);
 
   T_eltype v_ab[] = {
-     1*0.1 + 4*0.2,
-    -2*0.1 - 5*0.2,
-    -3*0.1 + 6*0.2,
-     1*0.3 + 4*0.4,
-    -2*0.3 - 5*0.4,
-    -3*0.3 + 6*0.4};
+    1 * 0.1 + 4 * 0.2, -2 * 0.1 - 5 * 0.2, -3 * 0.1 + 6 * 0.2,
+    1 * 0.3 + 4 * 0.4, -2 * 0.3 - 5 * 0.4, -3 * 0.3 + 6 * 0.4
+  };
 
   int retval = 1;
-  for (size_t i=0; i<T_nelems(value(g)); i++) {
+  for (size_t i = 0; i < T_nelems(value(g)); i++) {
     retval = retval && almost_eq(value(g)->data[i], v_ab[i]);
   }
 

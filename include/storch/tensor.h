@@ -1,10 +1,12 @@
 /** @file
  * Library of tensor operations.
  *
- * In Storch, tensors are limited to two-dimensional data structures (think: matrices).
- * This library contains the basic mathematical operations on tensors.
+ * In Storch, tensors are limited to two-dimensional data structures (think:
+ * matrices). This library contains the basic mathematical operations on
+ * tensors.
  *
- * @note Tensors are dynamically allocated either on the stack or in a `STORCH_CTX`.
+ * @note Tensors are dynamically allocated either on the stack or in a
+ * `STORCH_CTX`.
  * @note Many operations use numpy-style broadcasting of unitary dimensions.
  *
  */
@@ -20,12 +22,13 @@ typedef double T_eltype; /**< Type of tensor elements. */
 /**
  * Tensor structure implementation.
  *
- * Wraps a contiguous segment of memory into a two-dimensional tensor in column-major order.
+ * Wraps a contiguous segment of memory into a two-dimensional tensor in
+ * column-major order.
  */
 typedef struct storch_tensor_s
 {
-  size_t n; /**< Number of rows */
-  size_t m; /**< Number of columns */
+  size_t n;       /**< Number of rows */
+  size_t m;       /**< Number of columns */
   T_eltype* data; /**< Pointer to the tensor data (column-major layout). */
 } Tensor;
 
@@ -67,8 +70,7 @@ T_New(STORCH_CTX ctx, size_t n, size_t m);
  * @note A `NULL` context requires explicit destruction!
  *
  */
-Tensor*
-T_Zeros(STORCH_CTX, size_t, size_t);
+Tensor* T_Zeros(STORCH_CTX, size_t, size_t);
 
 /**
  * Create a new tensor filled with ones.
@@ -82,8 +84,7 @@ T_Zeros(STORCH_CTX, size_t, size_t);
  * @note A `NULL` context requires explicit destruction!
  *
  */
-Tensor*
-T_Ones(STORCH_CTX, size_t, size_t);
+Tensor* T_Ones(STORCH_CTX, size_t, size_t);
 
 /**
  * Create a new zero-initialized tensor with the same shape as the given tensor.
@@ -138,7 +139,7 @@ T_Destroy(Tensor* t);
  *
  */
 Tensor*
-T_Wrap(STORCH_CTX ctx, size_t n, size_t m, T_eltype data[static n*m]);
+T_Wrap(STORCH_CTX ctx, size_t n, size_t m, T_eltype data[static n * m]);
 
 /**
  * Build a new `n` times `m` tensor with direct arguments.
@@ -149,7 +150,7 @@ T_Wrap(STORCH_CTX ctx, size_t n, size_t m, T_eltype data[static n*m]);
  * @param[in] data data for initialization.
  *
  * @returns A pointer to the allocated tensor.
- * 
+ *
  */
 Tensor*
 T_Build(STORCH_CTX ctx, size_t n, size_t N, ...);
@@ -162,8 +163,7 @@ T_Build(STORCH_CTX ctx, size_t n, size_t N, ...);
  *
  * @returns A pointer to the allocated tesor.
  */
-Tensor*
-T_Scalar(STORCH_CTX, T_eltype);
+Tensor* T_Scalar(STORCH_CTX, T_eltype);
 
 /**
  * Create a new `n` times `m` tensor where all the entries are equal to `d`.
@@ -179,7 +179,8 @@ Tensor*
 T_Full(STORCH_CTX ctx, size_t n, size_t m, T_eltype d);
 
 /**
- * Create a new tensor with the same shape as `t` where all the entries are equal to `d`.
+ * Create a new tensor with the same shape as `t` where all the entries are
+ * equal to `d`.
  *
  * @param[in] ctx Optional Storch context.
  * @param[in] t Tensor whose shape is copied.
@@ -237,7 +238,7 @@ T_GetItem(const Tensor* const t, size_t i, size_t j);
  *
  */
 void
-T_SetItem(Tensor* const t, size_t i , size_t j, T_eltype d);
+T_SetItem(Tensor* const t, size_t i, size_t j, T_eltype d);
 
 /**
  * Element-wise tensor addition.
@@ -250,7 +251,7 @@ T_SetItem(Tensor* const t, size_t i , size_t j, T_eltype d);
  *
  */
 Tensor*
-T_Sum(STORCH_CTX ctx , const Tensor* const a, const Tensor* const b);
+T_Sum(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b);
 
 /**
  * In-place the element-wise tensor addition: `t = a + b`.
@@ -320,7 +321,6 @@ T_Add_(Tensor* const t, const Tensor* const a);
 Tensor*
 T_Mul(STORCH_CTX, const Tensor* const a, const Tensor* const b);
 
-
 /**
  * In-place the element-wise tensor multiplication: `t = a * b`.
  *
@@ -356,7 +356,6 @@ T_Div(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b);
 void
 T_Div_(Tensor* const t, const Tensor* const a, const Tensor* const b);
 
-
 /**
  * Element-wise tensor scaling.
  *
@@ -379,7 +378,7 @@ T_Scale(STORCH_CTX ctx, T_eltype alpha, const Tensor* const a);
  *
  */
 void
-T_Scale_(Tensor* const t, T_eltype alpha , const Tensor* const a);
+T_Scale_(Tensor* const t, T_eltype alpha, const Tensor* const a);
 
 /**
  * Element-wise tensor powering.
@@ -392,7 +391,7 @@ T_Scale_(Tensor* const t, T_eltype alpha , const Tensor* const a);
  *
  */
 Tensor*
-T_SPow(STORCH_CTX cxt, const Tensor* const a , T_eltype e);
+T_SPow(STORCH_CTX cxt, const Tensor* const a, T_eltype e);
 
 /**
  * In-place element-wise tensor powering: `t = a ** e`.
@@ -429,7 +428,7 @@ T_Pow_(Tensor* const t, const Tensor* const a, const Tensor* const b);
 
 /**
  * Element-wise tensor exponential.
- * 
+ *
  * @param[in] ctx Optional Storch context.
  * @param[in] a The input tensor.
  *
@@ -441,7 +440,7 @@ T_Exp(STORCH_CTX ctx, const Tensor* const a);
 
 /**
  * In-place element-wise tensor exponential: `t=exp(a)`.
- * 
+ *
  * @param[out] t The output tensor.
  * @param[in] a The input tensor.
  *
@@ -451,7 +450,7 @@ T_Exp_(Tensor* const t, const Tensor* const a);
 
 /**
  * Element-wise tensor natural logarithm.
- * 
+ *
  * @param[in] ctx Optional Storch context.
  * @param[in] a The input tensor.
  *
@@ -463,7 +462,7 @@ T_Log(STORCH_CTX ctx, const Tensor* const a);
 
 /**
  * In-place element-wise tensor natural logarith: `t=log(a)`.
- * 
+ *
  * @param[out] t The output tensor.
  * @param[in] a The input tensor.
  *
@@ -507,7 +506,13 @@ T_Minus_(Tensor* const t, const Tensor* const a);
  * @param[in] beta Second scaling factor.
  */
 void
-T_GEMM_(Tensor* const t, const Tensor* const a, bool transpose_a, const Tensor* const b, bool transpose_b, T_eltype alpha, T_eltype beta);
+T_GEMM_(Tensor* const t,
+        const Tensor* const a,
+        bool transpose_a,
+        const Tensor* const b,
+        bool transpose_b,
+        T_eltype alpha,
+        T_eltype beta);
 
 /**
  * Matrix multiplication.
@@ -539,7 +544,8 @@ T_MatMul_(Tensor* const t, const Tensor* const a, const Tensor* const b);
  * @param[in] ctx Optional Storch context.
  * @param[in] a Operand.
  *
- * @returns a pointer to a column tensor `t` where `t[i] = sum(a[i, j] for all j)`.
+ * @returns a pointer to a column tensor `t` where `t[i] = sum(a[i, j] for all
+ * j)`.
  *
  */
 Tensor*

@@ -6,10 +6,8 @@ int
 main(void)
 {
   STORCH_CTX ctx = STORCH_CTX_New();
-  GraphNode* g = G_Diff(ctx,
-        G_Value(ctx, T_Scalar(ctx, 13)),
-        G_Value(ctx, T_Scalar(ctx, 24))
-      );
+  GraphNode* g = G_Diff(
+    ctx, G_Value(ctx, T_Scalar(ctx, 13)), G_Value(ctx, T_Scalar(ctx, 24)));
 
   forward(g);
 
