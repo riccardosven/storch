@@ -13,7 +13,7 @@ main(void)
 
   int retval = 1;
 
-  for (size_t i = 0; i < nelems(t); i++)
+  for (size_t i = 0; i < T_nelems(t); i++)
     retval = retval && t->data[i] == d[i];
 
   T_Destroy(t);

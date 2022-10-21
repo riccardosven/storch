@@ -40,7 +40,7 @@ int test_AB(void)
                    alpha * (2 * 7 - 4 * 3 - 2 * 6) + beta * 4 };
 
   int retval = 1;
-  for (size_t i = 0; i < nelems(c); i++)
+  for (size_t i = 0; i < T_nelems(c); i++)
     retval = retval && almost_eq(r1[i], c->data[i]);
 
   T_Destroy(a);

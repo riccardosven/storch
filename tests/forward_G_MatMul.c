@@ -33,7 +33,7 @@ main(void)
     -3*0.3 + 6*0.4};
 
   int retval = 1;
-  for (size_t i=0; i<nelems(value(g)); i++) {
+  for (size_t i=0; i<T_nelems(value(g)); i++) {
     retval = retval && almost_eq(value(g)->data[i], v_ab[i]);
   }
 

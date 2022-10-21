@@ -16,43 +16,43 @@
 
 static inline void
 T_Broadcast_(T_eltype (*operation)(T_eltype, T_eltype),
-             Tensor* t,
-             Tensor* a,
-             Tensor* b)
+             const Tensor* const t,
+             const Tensor* const a,
+             const Tensor* const b)
 {
   if ((a->n == b->n) && (a->m == b->m)) {
     /* matrix-matrix */
-    for (size_t i = 0; i < nelems(t); i++) {
+    for (size_t i = 0; i < T_nelems(t); i++) {
       t->data[i] = operation(a->data[i], b->data[i]);
     }
   } else if ((b->n == 1) && (b->m == 1)) {
     /* matrix-scalar */
-    for (size_t i = 0; i < nelems(t); i++) {
+    for (size_t i = 0; i < T_nelems(t); i++) {
       t->data[i] = operation(a->data[i], b->data[0]);
     }
   } else if ((a->n == b->n) && (b->m == 1)) {
     /* matrix-column */
-    for (size_t i = 0; i < nelems(a); i++) {
+    for (size_t i = 0; i < T_nelems(a); i++) {
       t->data[i] = operation(a->data[i], b->data[i % a->n]);
     }
   } else if ((a->m == b->m) && (b->n == 1)) {
     /* matrix-row */
-    for (size_t i = 0; i < nelems(a); i++) {
+    for (size_t i = 0; i < T_nelems(a); i++) {
       t->data[i] = operation(a->data[i], b->data[i / a->n]);
     }
   } else if ((a->n == b->n) && (a->m == 1)) {
     /* column-matrix */
-    for (size_t i = 0; i < nelems(b); i++) {
+    for (size_t i = 0; i < T_nelems(b); i++) {
       t->data[i] = operation(a->data[i % b->n], b->data[i]);
     }
   } else if ((a->n == 1) && (a->m == b->m)) {
     /* row-matrix */
-    for (size_t i = 0; i < nelems(b); i++) {
+    for (size_t i = 0; i < T_nelems(b); i++) {
       t->data[i] = operation(a->data[i / b->n], b->data[i]);
     }
   } else if ((a->n == 1) && (a->m == 1)) {
     /* scalar-matrix */
-    for (size_t i = 0; i < nelems(b); i++) {
+    for (size_t i = 0; i < T_nelems(b); i++) {
       t->data[i] = operation(a->data[0], b->data[i]);
     }
   } else {
@@ -85,13 +85,13 @@ op_div(T_eltype a, T_eltype b)
 }
 
 size_t
-nelems(Tensor* t)
+T_nelems(const Tensor* const t)
 {
   return t->n * t->m;
 }
 
 bool
-isscalar(Tensor* t)
+isscalar(const Tensor* const t)
 {
   return t->n == 1 && t->m == 1;
 }
@@ -111,13 +111,13 @@ Tensor*
 T_Full(SCORCH_CTX ctx, size_t n, size_t m, T_eltype a)
 {
   Tensor* t = T_New(ctx, n, m);
-  for (size_t i = 0; i < nelems(t); i++)
+  for (size_t i = 0; i < T_nelems(t); i++)
     t->data[i] = a;
   return t;
 }
 
 Tensor*
-T_FullLike(SCORCH_CTX ctx, Tensor* t, T_eltype a)
+T_FullLike(SCORCH_CTX ctx, const Tensor* const t, T_eltype a)
 {
   return T_Full(ctx, t->n, t->m, a);
 }
@@ -135,13 +135,13 @@ T_Zeros(SCORCH_CTX ctx, size_t n, size_t m)
 }
 
 Tensor*
-T_ZerosLike(SCORCH_CTX ctx, Tensor* t)
+T_ZerosLike(SCORCH_CTX ctx, const Tensor* const t)
 {
   return T_Zeros(ctx, t->n, t->m);
 }
 
 Tensor*
-T_OnesLike(SCORCH_CTX ctx, Tensor* t)
+T_OnesLike(SCORCH_CTX ctx, const Tensor* const t)
 {
   return T_Ones(ctx, t->n, t->m);
 }
@@ -172,15 +172,15 @@ T_Wrap(SCORCH_CTX ctx, size_t n, size_t m, T_eltype s[static n * m])
 }
 
 void
-T_Copy_(Tensor* t, Tensor* a)
+T_Copy_(Tensor* const t, const Tensor* const a)
 {
   assert(t->n == a->n && t->m == a->m);
-  for (size_t i = 0; i < nelems(t); i++)
+  for (size_t i = 0; i < T_nelems(t); i++)
     t->data[i] = a->data[i];
 }
 
 Tensor*
-T_Copy(SCORCH_CTX ctx, Tensor* a)
+T_Copy(SCORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_Copy_(t, a);
@@ -188,7 +188,7 @@ T_Copy(SCORCH_CTX ctx, Tensor* a)
 }
 
 T_eltype
-T_GetItem(Tensor* t, size_t i, size_t j)
+T_GetItem(const Tensor* const t, size_t i, size_t j)
 {
   assert(i < t->n && j < t->m);
 
@@ -196,14 +196,14 @@ T_GetItem(Tensor* t, size_t i, size_t j)
 }
 
 void
-T_SetItem(Tensor* t, size_t i, size_t j, T_eltype d)
+T_SetItem(Tensor* const t, size_t i, size_t j, T_eltype d)
 {
   assert(i < t->n && j < t->m);
   t->data[i + t->n * j] = d;
 }
 
 Tensor*
-T_Sum(SCORCH_CTX ctx, Tensor* a, Tensor* b)
+T_Sum(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -215,25 +215,25 @@ T_Sum(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 }
 
 void
-T_Sum_(Tensor* t, Tensor* a, Tensor* b)
+T_Sum_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 {
   T_Broadcast_(op_sum, t, a, b);
 }
 
 void
-T_Add_(Tensor* t, Tensor* a)
+T_Add_(Tensor* const t, const Tensor* const a)
 {
   T_Sum_(t, t, a);
 }
 
 void
-T_Diff_(Tensor* t, Tensor* a, Tensor* b)
+T_Diff_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 {
   T_Broadcast_(op_diff, t, a, b);
 }
 
 Tensor*
-T_Diff(SCORCH_CTX ctx, Tensor* a, Tensor* b)
+T_Diff(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -244,19 +244,19 @@ T_Diff(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 }
 
 void
-T_Sub_(Tensor* t, Tensor* a)
+T_Sub_(Tensor* const t, const Tensor* const a)
 {
   T_Diff_(t, t, a);
 }
 
 void
-T_Mul_(Tensor* t, Tensor* a, Tensor* b)
+T_Mul_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 {
   T_Broadcast_(op_mul, t, a, b);
 }
 
 Tensor*
-T_Mul(SCORCH_CTX ctx, Tensor* a, Tensor* b)
+T_Mul(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -267,13 +267,13 @@ T_Mul(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 }
 
 void
-T_Div_(Tensor* t, Tensor* a, Tensor* b)
+T_Div_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 {
   T_Broadcast_(op_div, t, a, b);
 }
 
 Tensor*
-T_Div(SCORCH_CTX ctx, Tensor* a, Tensor* b)
+T_Div(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -284,15 +284,15 @@ T_Div(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 }
 
 void
-T_Scale_(Tensor* t, T_eltype a, Tensor* b)
+T_Scale_(Tensor* const t, T_eltype a, const Tensor* const b)
 {
   assert(t->n == b->n && t->m == b->m);
-  for (size_t i = 0; i < nelems(t); i++)
+  for (size_t i = 0; i < T_nelems(t); i++)
     t->data[i] = a * b->data[i];
 }
 
 Tensor*
-T_Scale(SCORCH_CTX ctx, T_eltype a, Tensor* b)
+T_Scale(SCORCH_CTX ctx, T_eltype a, const Tensor* const b)
 {
   Tensor* t = T_New(ctx, b->n, b->m);
   T_Scale_(t, a, b);
@@ -300,15 +300,15 @@ T_Scale(SCORCH_CTX ctx, T_eltype a, Tensor* b)
 }
 
 void
-T_SPow_(Tensor* t, Tensor* a, T_eltype b)
+T_SPow_(Tensor* const t, const Tensor* const a, T_eltype b)
 {
   assert(t->n == a->n && t->m == a->m);
-  for (size_t i = 0; i < nelems(t); i++)
+  for (size_t i = 0; i < T_nelems(t); i++)
     t->data[i] = pow(a->data[i], b);
 }
 
 Tensor*
-T_SPow(SCORCH_CTX ctx, Tensor* a, T_eltype b)
+T_SPow(SCORCH_CTX ctx, const Tensor* const a, T_eltype b)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_SPow_(t, a, b);
@@ -317,13 +317,13 @@ T_SPow(SCORCH_CTX ctx, Tensor* a, T_eltype b)
 }
 
 void
-T_Pow_(Tensor* t, Tensor* a, Tensor* b)
+T_Pow_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 {
   T_Broadcast_(pow, t, a, b);
 }
 
 Tensor*
-T_Pow(SCORCH_CTX ctx, Tensor* a, Tensor* b)
+T_Pow(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   size_t n = max(a->n, b->n);
   size_t m = max(a->m, b->m);
@@ -334,14 +334,14 @@ T_Pow(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 }
 
 void
-T_Minus_(Tensor* t, Tensor* a)
+T_Minus_(Tensor* const t, const Tensor* const a)
 {
-  for (size_t i = 0; i < nelems(t); i++)
+  for (size_t i = 0; i < T_nelems(t); i++)
     t->data[i] = -a->data[i];
 }
 
 Tensor*
-T_Minus(SCORCH_CTX ctx, Tensor* a)
+T_Minus(SCORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_Minus_(t, a);
@@ -349,15 +349,15 @@ T_Minus(SCORCH_CTX ctx, Tensor* a)
 }
 
 void
-T_Exp_(Tensor* t, Tensor* a)
+T_Exp_(Tensor* const t, const Tensor* const a)
 {
   assert(t->n == a->n && t->m == a->m);
-  for (size_t i = 0; i < nelems(t); i++)
+  for (size_t i = 0; i < T_nelems(t); i++)
     t->data[i] = exp(a->data[i]);
 }
 
 Tensor*
-T_Exp(SCORCH_CTX ctx, Tensor* a)
+T_Exp(SCORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_Exp_(t, a);
@@ -365,15 +365,15 @@ T_Exp(SCORCH_CTX ctx, Tensor* a)
 }
 
 void
-T_Log_(Tensor* t, Tensor* a)
+T_Log_(Tensor* const t, const Tensor* const a)
 {
   assert(t->n == a->n && t->m == a->m);
-  for (size_t i = 0; i < nelems(t); i++)
+  for (size_t i = 0; i < T_nelems(t); i++)
     t->data[i] = log(a->data[i]);
 }
 
 Tensor*
-T_Log(SCORCH_CTX ctx, Tensor* a)
+T_Log(SCORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, a->m);
   T_Log_(t, a);
@@ -381,21 +381,21 @@ T_Log(SCORCH_CTX ctx, Tensor* a)
 }
 
 void
-T_GEMM_(Tensor* t,
-        Tensor* a,
-        bool Ta,
-        Tensor* b,
-        bool Tb,
+T_GEMM_(Tensor* const t,
+        const Tensor* const a,
+        bool transpose_a,
+        const Tensor* const b,
+        bool transpose_b,
         T_eltype alpha,
         T_eltype beta)
 {
 
   cblas_dgemm(CblasColMajor,
-              Ta ? CblasTrans : CblasNoTrans,
-              Tb ? CblasTrans : CblasNoTrans,
+              transpose_a ? CblasTrans : CblasNoTrans,
+              transpose_b ? CblasTrans : CblasNoTrans,
               t->n,
               t->m,
-              Ta ? a->n : a->m,
+              transpose_a ? a->n : a->m,
               alpha,
               a->data,
               a->n,
@@ -407,7 +407,7 @@ T_GEMM_(Tensor* t,
 }
 
 Tensor*
-T_MatMul(SCORCH_CTX ctx, Tensor* a, Tensor* b)
+T_MatMul(SCORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
   assert(a->m == b->n);
 
@@ -419,7 +419,7 @@ T_MatMul(SCORCH_CTX ctx, Tensor* a, Tensor* b)
 }
 
 void
-T_MatMul_(Tensor* t, Tensor* a, Tensor* b)
+T_MatMul_(Tensor* const t, const Tensor* const a,const Tensor* const b)
 {
   assert(t->n == a->n && t->m == b->m && a->m == b->n);
 
@@ -437,7 +437,7 @@ T_MatMul_(Tensor* t, Tensor* a, Tensor* b)
 }
 
 Tensor*
-T_SumReduce(SCORCH_CTX ctx, Tensor* a)
+T_SumReduce(SCORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, 1);
   T_SumReduce_(t, a);
@@ -446,7 +446,7 @@ T_SumReduce(SCORCH_CTX ctx, Tensor* a)
 }
 
 void
-T_SumReduce_(Tensor* t, Tensor* a)
+T_SumReduce_(Tensor* restrict const t, const Tensor* restrict const a)
 {
   assert(t->n == a->n && t->m == 1);
 

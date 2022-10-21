@@ -33,7 +33,7 @@ main(void)
     -3*3 - 6*2};
 
   int retval = 1;
-  for (size_t i = 0; i < nelems(s); i++) {
+  for (size_t i = 0; i < T_nelems(s); i++) {
     retval = retval && (s->data[i] == vc[i]);
   }
 

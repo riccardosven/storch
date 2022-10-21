@@ -10,7 +10,7 @@ main(void)
 
   int retval = t->n == 12 && t->m == 14 && t->data != NULL;
 
-  for (size_t i = 0; i < nelems(t); i++) {
+  for (size_t i = 0; i < T_nelems(t); i++) {
     retval = retval && (t->data[i] == 1);
   }
 

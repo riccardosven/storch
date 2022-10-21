@@ -51,9 +51,9 @@ trainLoop(Dataset d, Tensor *w_v, Tensor *b_v)
     forward(loss);
     backward(loss);
 
-    for (size_t i=0;  i< nelems(w_v); i++)
+    for (size_t i=0;  i< T_nelems(w_v); i++)
       printf("%f ", grad(w)->data[i]);
-    for (size_t i=0; i<nelems(b_v); i++)
+    for (size_t i=0; i<T_nelems(b_v); i++)
       printf("%f ", grad(b)->data[i]);
     printf("\n");
  //printf("%f %f %f\n", value(loss)->data[0], grad(b)->data[0], value(b)->data[0]);

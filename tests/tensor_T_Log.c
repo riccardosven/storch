@@ -15,7 +15,7 @@ main(void)
   // s = log(a)
   Tensor* s = T_Log(NULL, a);
   int retval = 1;
-  for (size_t i = 0; i < nelems(s); i++) {
+  for (size_t i = 0; i < T_nelems(s); i++) {
     retval = retval && (s->data[i] == log(va[i]));
   }
 

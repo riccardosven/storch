@@ -11,14 +11,14 @@ main(void)
   Tensor* t2 = T_Ones(NULL, 3, 2);
 
   int retval = 1;
-  for (size_t i = 0; i < nelems(t1); i++)
+  for (size_t i = 0; i < T_nelems(t1); i++)
     retval = retval && t1->data[i] != t2->data[i];
 
   Tensor* t3 = T_Copy(NULL, t1);
   T_Copy_(t2, t1);
 
   retval = retval && t3->data != t1->data;
-  for (size_t i = 0; i < nelems(t1); i++) {
+  for (size_t i = 0; i < T_nelems(t1); i++) {
     retval = retval && t1->data[i] == t2->data[i] && t1->data[i] == t3->data[i];
   }
 
