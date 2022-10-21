@@ -1,4 +1,4 @@
-# Storch
+# Storch ![master](https://github.com/riccardosven/storch/actions/workflows/cmake.yml/badge.svg)
 
 Storch is a very simple torch-like tensor operation engine.
 
