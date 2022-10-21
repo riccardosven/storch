@@ -17,7 +17,8 @@
 
 typedef double T_eltype; /**< Type of tensor elements. */
 
-/** Tensor structure implementation.
+/**
+ * Tensor structure implementation.
  *
  * Wraps a contiguous segment of memory into a two-dimensional tensor in column-major order.
  */
@@ -28,7 +29,8 @@ typedef struct storch_tensor_s
   T_eltype* data; /**< Pointer to the tensor data (column-major layout). */
 } Tensor;
 
-/** Find the number of elements of a tensor
+/**
+ * Find the number of elements of a tensor
  *
  * @param[in] t input tensor.
  *
