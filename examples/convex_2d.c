@@ -11,12 +11,11 @@ objectiveFunction(STORCH_CTX ctx, GraphNode * x)
   T_eltype tgt[] = {0.3, -1.2};
   GraphNode* x_t = G_Value(ctx, T_Wrap(ctx, 2,1, tgt));
 
-  return G_MatMul(ctx, 
-      G_Value(ctx, T_Ones(ctx, 1,2)),
-      G_Pow(ctx,
-        G_Diff(ctx, x, x_t),
-        G_Value(ctx, T_Full(ctx, 2, 1, 2.0))
-        )
+  return G_SumReduce(ctx, 
+          G_Pow(ctx,
+            G_Diff(ctx, x, x_t),
+            G_Value(ctx, T_Scalar(ctx, 2.0))
+          )
       );
 }
 
