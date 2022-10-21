@@ -14,6 +14,7 @@ include(ClangFormat)
 
 set(CB_VENDOR OpenBLAS)
 find_package(BLAS REQUIRED)
+find_package(CHECK REQUIRED)
 
 include_directories("include")
 
