@@ -8,7 +8,6 @@
 #define STORCH_H
 
 #include <stdio.h>
-#include "storch/tensor.h"
 
 typedef struct storch_ctx_s* STORCH_CTX;  /**< Opaque data structure defining a graph contex */
 typedef struct graphnode_s GraphNode;  /**< A node in the storch graph. */

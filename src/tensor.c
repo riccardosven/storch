@@ -419,7 +419,7 @@ T_MatMul(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 }
 
 void
-T_MatMul_(Tensor* const t, const Tensor* const a,const Tensor* const b)
+T_MatMul_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 {
   assert(t->n == a->n && t->m == b->m && a->m == b->n);
 

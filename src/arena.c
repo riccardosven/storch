@@ -35,8 +35,7 @@ STORCH_CTX_Destroy(STORCH_CTX ctx)
   while (ctx->g_len--)
     G_Destroy(ctx->g_arena[ctx->g_len]);
 
-
-  while (ctx -> t_len--)
+  while (ctx->t_len--)
     T_Destroy(ctx->t_arena[ctx->t_len]);
 
   free(ctx->g_arena);
@@ -83,4 +82,3 @@ T_Malloc(STORCH_CTX ctx)
 
   return t;
 }
-
