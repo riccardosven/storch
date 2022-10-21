@@ -8,7 +8,7 @@ main(void)
 
   STORCH_CTX ctx = STORCH_CTX_New();
 
-  T_eltype x_t[] = {1, 2, 3, 4};
+  T_eltype x_t[] = { 1, 2, 3, 4 };
 
   GraphNode* p = G_Parameter(ctx, T_Wrap(ctx, 1, 4, x_t));
 

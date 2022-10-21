@@ -1,7 +1,7 @@
-#include <stdlib.h>
 #include "common.h"
 #include "storch/storch.h"
 #include "storch/tensor.h"
+#include <stdlib.h>
 
 int
 main(void)
@@ -15,9 +15,9 @@ main(void)
 
   STORCH_CTX ctx = STORCH_CTX_New();
 
-  T_eltype v_a[] = {1,3,5,2,4,6};
-  T_eltype v_b[] = {0.7, 0.9};
-  T_eltype v_c[] = {1, -2, 3};
+  T_eltype v_a[] = { 1, 3, 5, 2, 4, 6 };
+  T_eltype v_b[] = { 0.7, 0.9 };
+  T_eltype v_c[] = { 1, -2, 3 };
 
   Tensor* t_a = T_Wrap(ctx, 3, 2, v_a);
   Tensor* t_b = T_Wrap(ctx, 2, 1, v_b);
@@ -34,21 +34,17 @@ main(void)
   forward(g);
   backward(g);
 
-  int retval = almost_eq(value(g)->data[0], 17.8) &&
+  int retval =
+    almost_eq(value(g)->data[0], 17.8) &&
 
-     almost_eq(grad(c)->data[0], 2.5) &&
-     almost_eq(grad(c)->data[1], 5.7) &&
-     almost_eq(grad(c)->data[2], 8.9) &&
+    almost_eq(grad(c)->data[0], 2.5) && almost_eq(grad(c)->data[1], 5.7) &&
+    almost_eq(grad(c)->data[2], 8.9) &&
 
-     almost_eq(grad(a)->data[0], 0.7) &&
-     almost_eq(grad(a)->data[1], -1.4) &&
-     almost_eq(grad(a)->data[2], 2.1) &&
-     almost_eq(grad(a)->data[3], 0.9) &&
-     almost_eq(grad(a)->data[4], -1.8) &&
-     almost_eq(grad(a)->data[5], 2.7) &&
+    almost_eq(grad(a)->data[0], 0.7) && almost_eq(grad(a)->data[1], -1.4) &&
+    almost_eq(grad(a)->data[2], 2.1) && almost_eq(grad(a)->data[3], 0.9) &&
+    almost_eq(grad(a)->data[4], -1.8) && almost_eq(grad(a)->data[5], 2.7) &&
 
-     almost_eq(grad(b)->data[0], 10.) &&
-     almost_eq(grad(b)->data[1], 12.);
+    almost_eq(grad(b)->data[0], 10.) && almost_eq(grad(b)->data[1], 12.);
 
   STORCH_CTX_Destroy(ctx);
 

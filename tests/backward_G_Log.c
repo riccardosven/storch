@@ -15,7 +15,7 @@ main(void)
   forward(g);
   backward(g);
 
-  int retval = check_almost_eq(grad(a)->data[0], 1/a_v);
+  int retval = check_almost_eq(grad(a)->data[0], 1 / a_v);
 
   STORCH_CTX_Destroy(ctx);
 
