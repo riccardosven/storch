@@ -12,8 +12,10 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(ClangFormat)
 
-set(CB_VENDOR OpenBLAS)
-find_package(BLAS REQUIRED)
+find_package(CBLAS REQUIRED)
+find_package(CHECK REQUIRED)
+
+message("Found CBLAS libraries: " ${CBLAS_LIBRARIES})
 
 include_directories("include")
 

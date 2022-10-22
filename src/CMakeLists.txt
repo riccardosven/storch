@@ -4,7 +4,7 @@ add_library(storch tensor.c arena.c ops.c graph.c storch.c ${HEADER_LIST})
 
 target_include_directories(storch PUBLIC ../include)
 
-target_link_libraries(storch PRIVATE m blas cblas)
+target_link_libraries(storch PRIVATE m ${CBLAS_LIBRARIES})
 
 source_group(
     TREE "${PROJECT_SOURCE_DIR}/include"
