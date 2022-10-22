@@ -21,6 +21,7 @@ T_Broadcast_(T_eltype (*operation)(T_eltype, T_eltype),
              const Tensor* const a,
              const Tensor* const b)
 {
+
   if ((a->n == b->n) && (a->m == b->m)) {
     /* matrix-matrix */
     for (size_t i = 0; i < T_nelems(t); i++) {
@@ -56,8 +57,14 @@ T_Broadcast_(T_eltype (*operation)(T_eltype, T_eltype),
     for (size_t i = 0; i < T_nelems(b); i++) {
       t->data[i] = operation(a->data[0], b->data[i]);
     }
+  } else if ((a->m == 1) && (b->n == 1)) {
+    /* outer product */
+    for (size_t i=0; i < T_nelems(t); i++) {
+      t->data[i] = operation(a->data[ i % a->n], b->data[i / a->n]);
+    }
   } else {
-    assert(0);
+  fprintf(stderr, "A: %ldx%ld B: %ldx%ld T: %ldx%ld\n", a->n, a->m, b->n, b->m,t->n, t->m);
+    exit(1);
   }
 }
 
@@ -112,7 +119,7 @@ Tensor*
 T_Build(STORCH_CTX ctx, size_t n, size_t m, size_t N, ...)
 {
 
-  assert(n * m == N);
+  assert(N == n*m);
 
   Tensor* t = T_New(ctx, n, m);
 
