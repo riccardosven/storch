@@ -137,27 +137,33 @@ G_Pow_Backward(GraphNode* x)
   assert(x->op == POWER);
   assert(x->arity == 2);
 
-  Tensor* b = T_Copy(NULL, value(x->operands[1]));
-  Tensor* o = T_OnesLike(NULL, b);
+  Tensor *a = value(x->operands[0]);
+  Tensor *b = value(x->operands[1]);
 
-  T_Diff_(o, b, o);
+  Tensor* da =
+      T_Mul(NULL,
+          b,
+          T_Div(NULL, value(x), a)
+        );
 
-  // x->operands[0]->g += x->g * b * pow(a, b-1);
-  Tensor* a = T_Pow(NULL, value(x->operands[0]), o);
-  T_Mul_(a, b, a);
-  T_Mul_(a, grad(x), a);
-  T_Add_(grad(x->operands[0]), a);
+  printf("-------------\n");
+  print(a);
+  printf("-------------\n");
+  print(da);
+  printf("-------------\n");
+
+
+ //  T_Copy_(a, da);
+ //  T_Add_(grad(x->operands[0]), da);
 
   // x->operands[1]->g += x->g * value(x) * log(t0);
-  Tensor* c = T_Log(NULL, value(x->operands[0]));
-  T_Mul_(c, value(x), c);
-  T_Mul_(c, grad(x), c);
-  T_Add_(grad(x->operands[1]), c);
+  // Tensor* c = T_Log(NULL, value(x->operands[0]));
+  // T_Mul_(c, value(x), c);
+  // T_Mul_(c, grad(x), c);
+  // T_Add_(grad(x->operands[1]), c);
 
-  T_Destroy(a);
-  T_Destroy(b);
-  T_Destroy(c);
-  T_Destroy(o);
+  T_Destroy(da);
+  // T_Destroy(c);
 }
 
 void
@@ -230,23 +236,47 @@ G_MatMul_Backward(GraphNode* x)
 }
 
 void
-G_SumReduce_Forward(GraphNode* x)
+G_SumReduce0_Forward(GraphNode* x)
 {
-  assert(x->op == SUMREDUCE);
+  assert(x->op == SUMREDUCE_ROW);
   assert(x->arity == 1);
 
-  x->t = T_SumReduce(x->ctx, value(x->operands[0]));
+  x->t = T_SumReduce0(x->ctx, value(x->operands[0]));
 }
 
 void
-G_SumReduce_Backward(GraphNode* x)
+G_SumReduce0_Backward(GraphNode* x)
 {
 
   /*
    * y = ones'x
    * dy = ones'dx
    */
-  assert(x->op == SUMREDUCE);
+  assert(x->op == SUMREDUCE_ROW);
+  assert(x->arity == 1);
+
+  T_Sum_(grad(x->operands[0]), grad(x->operands[0]), grad(x));
+}
+
+
+void
+G_SumReduce1_Forward(GraphNode* x)
+{
+  assert(x->op == SUMREDUCE_COL);
+  assert(x->arity == 1);
+
+  x->t = T_SumReduce1(x->ctx, value(x->operands[0]));
+}
+
+void
+G_SumReduce1_Backward(GraphNode* x)
+{
+
+  /*
+   * y = ones'x
+   * dy = ones'dx
+   */
+  assert(x->op == SUMREDUCE_COL);
   assert(x->arity == 1);
 
   T_Sum_(grad(x->operands[0]), grad(x->operands[0]), grad(x));
