@@ -540,6 +540,29 @@ void
 T_MatMul_(Tensor* const t, const Tensor* const a, const Tensor* const b);
 
 /**
+ * Tensor crow reduction operation.
+ *
+ * @param[in] ctx Optional Storch context.
+ * @param[in] a Operand.
+ *
+ * @returns a pointer to a row tensor `t` where `t[j] = sum(a[i, j] for all
+ * i)`.
+ *
+ */
+Tensor*
+T_SumReduce0(STORCH_CTX ctx, const Tensor* const a);
+
+/**
+ * In-place tensor row reduction operation: `t[j] = sum(a[i, j] for all i)`.
+ *
+ * @param[out] t Output tensor.
+ * @param[in] a Operand tensor.
+ *
+ */
+void
+T_SumReduce0_(Tensor* restrict const t, const Tensor* restrict const a);
+
+/**
  * Tensor column reduction operation.
  *
  * @param[in] ctx Optional Storch context.
@@ -550,7 +573,7 @@ T_MatMul_(Tensor* const t, const Tensor* const a, const Tensor* const b);
  *
  */
 Tensor*
-T_SumReduce(STORCH_CTX ctx, const Tensor* const a);
+T_SumReduce1(STORCH_CTX ctx, const Tensor* const a);
 
 /**
  * In-place tensor column reduction operation: `t[i] = sum(a[i, j] for all j)`.
@@ -560,6 +583,6 @@ T_SumReduce(STORCH_CTX ctx, const Tensor* const a);
  *
  */
 void
-T_SumReduce_(Tensor* restrict const t, const Tensor* restrict const a);
+T_SumReduce1_(Tensor* restrict const t, const Tensor* restrict const a);
 
 #endif // STORCH_TENSOR_H
