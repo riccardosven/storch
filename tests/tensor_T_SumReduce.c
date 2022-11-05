@@ -5,9 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 static int
-by_row() {
+by_row()
+{
 
   Tensor* a = T_Build(NULL, 2, 3, 6, 1.0, 2.0, 3.0, 4.0, -5.0, -6.0);
 
@@ -16,9 +16,9 @@ by_row() {
   assert(t->n == 1);
   assert(t->m == 3);
 
-  int retval = check_almost_eq(t->data[0], 1.0 + 2.0)
-   + check_almost_eq(t->data[1], 3.0 + 4.0)
-   + check_almost_eq(t->data[2], -5.0 - 6.0);
+  int retval = check_almost_eq(t->data[0], 1.0 + 2.0) +
+               check_almost_eq(t->data[1], 3.0 + 4.0) +
+               check_almost_eq(t->data[2], -5.0 - 6.0);
 
   printf("t: %f %f %f\n", t->data[0], t->data[1], t->data[2]);
 
@@ -31,9 +31,9 @@ by_row() {
   return retval;
 }
 
-
 static int
-by_col() {
+by_col()
+{
 
   Tensor* a = T_Build(NULL, 2, 3, 6, 1.0, 2.0, 3.0, 4.0, -5.0, -6.0);
 
@@ -42,8 +42,8 @@ by_col() {
   assert(t->n == 2);
   assert(t->m == 1);
 
-  int retval = check_almost_eq(t->data[0], 1.0 + 3.0 - 5.0)
-   + check_almost_eq(t->data[1], 2.0 + 4.0 - 6.0);
+  int retval = check_almost_eq(t->data[0], 1.0 + 3.0 - 5.0) +
+               check_almost_eq(t->data[1], 2.0 + 4.0 - 6.0);
 
   T_Destroy(t);
   T_Destroy(a);
@@ -54,13 +54,8 @@ by_col() {
   return retval;
 }
 
-
-
-
-
 int
 main(void)
 {
   return by_row() + by_col();
 }
-

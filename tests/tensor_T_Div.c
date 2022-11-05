@@ -7,8 +7,8 @@ int
 test_matrix_matrix()
 {
 
-  Tensor* a = T_Build(NULL, 2, 3, 6, 1.0, 2.0, 3.0, 4.0, -5.0, 6.0 );
-  Tensor* b = T_Build(NULL, 2, 3, 6, 3.0, -2.0, 1.0, 2.0, 9.0, 1.0 );
+  Tensor* a = T_Build(NULL, 2, 3, 6, 1.0, 2.0, 3.0, 4.0, -5.0, 6.0);
+  Tensor* b = T_Build(NULL, 2, 3, 6, 3.0, -2.0, 1.0, 2.0, 9.0, 1.0);
 
   Tensor* s = T_Div(NULL, a, b);
 
@@ -36,11 +36,13 @@ test_matrix_row()
    * 2 4  6
    */
 
-  Tensor* a = T_Build(NULL, 2, 3, 6, 1., 2., 3., 4., -5., 6. );
+  Tensor* a = T_Build(NULL, 2, 3, 6, 1., 2., 3., 4., -5., 6.);
   Tensor* b = T_Build(NULL, 1, 3, 3, 3., -2., -1.);
 
-  T_eltype e1[] = { 1.0 / 3.0, 2.0 / 3.0, -3.0 / 2.0, -4.0/2.0, 5.0 / 1.0, -6.0 / 1.0 };
-  T_eltype e2[] = { 3.0 / 1.0, 3.0 / 2.0, -2.0 / 3.0, -2.0/4.0, 1.0 / 5.0, -1.0 / 6.0 };
+  T_eltype e1[] = { 1.0 / 3.0,  2.0 / 3.0, -3.0 / 2.0,
+                    -4.0 / 2.0, 5.0 / 1.0, -6.0 / 1.0 };
+  T_eltype e2[] = { 3.0 / 1.0,  3.0 / 2.0, -2.0 / 3.0,
+                    -2.0 / 4.0, 1.0 / 5.0, -1.0 / 6.0 };
 
   Tensor* s1 = T_Div(NULL, a, b);
   Tensor* s2 = T_Div(NULL, b, a);
@@ -69,8 +71,8 @@ test_matrix_col()
    * 2 4  6
    */
 
-  Tensor* a = T_Build(NULL, 2, 3, 6,  1., 2., 3., 4., -5., 6. );
-  Tensor* b = T_Build(NULL, 2, 1, 2,  -2., 3. );
+  Tensor* a = T_Build(NULL, 2, 3, 6, 1., 2., 3., 4., -5., 6.);
+  Tensor* b = T_Build(NULL, 2, 1, 2, -2., 3.);
 
   Tensor* s1 = T_Div(NULL, a, b);
   Tensor* s2 = T_Div(NULL, b, a);
@@ -101,7 +103,7 @@ int
 test_matrix_scalar()
 {
 
-  Tensor* a = T_Build(NULL, 2, 3, 6, 1., 2., 3., 4., -5., 6. );
+  Tensor* a = T_Build(NULL, 2, 3, 6, 1., 2., 3., 4., -5., 6.);
   Tensor* b = T_Scalar(NULL, 1.1);
 
   Tensor* s1 = T_Div(NULL, a, b);

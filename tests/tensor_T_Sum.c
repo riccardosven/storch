@@ -126,13 +126,13 @@ test_vector_vector()
 
   Tensor* s1 = T_Sum(NULL, a, b);
 
-  T_eltype e[] = {1.6, 2.6, 3.6, 4.6, 1.7, 2.7, 3.7, 4.7, 1.8, 2.8, 3.8, 4.8};
+  T_eltype e[] = { 1.6, 2.6, 3.6, 4.6, 1.7, 2.7, 3.7, 4.7, 1.8, 2.8, 3.8, 4.8 };
 
   int retval = 0;
 
   retval += s1->n != 4;
   retval += s1->m != 3;
-  for (size_t i=0; i<12; i++) {
+  for (size_t i = 0; i < 12; i++) {
     retval += check_almost_eq(s1->data[i], e[i]);
   }
 

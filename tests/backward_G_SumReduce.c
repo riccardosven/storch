@@ -1,13 +1,15 @@
 #include "common.h"
-#include <assert.h>
 #include "storch/storch.h"
 #include "storch/tensor.h"
+#include <assert.h>
 
 static int
-by_row() {
+by_row()
+{
   STORCH_CTX ctx = STORCH_CTX_New();
 
-  GraphNode* x = G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1.0, 2.0, 3.0, 4.0, -5.0, -6.0));
+  GraphNode* x =
+    G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1.0, 2.0, 3.0, 4.0, -5.0, -6.0));
 
   GraphNode* g = G_SumReduce0(ctx, x);
 
@@ -19,7 +21,7 @@ by_row() {
 
   int retval = 0;
 
-  for (int i=0; i<6; i++)
+  for (int i = 0; i < 6; i++)
     retval += check_almost_eq(grad(x)->data[i], 1.0);
 
   STORCH_CTX_Destroy(ctx);
@@ -30,12 +32,13 @@ by_row() {
   return retval;
 }
 
-
 static int
-by_col() {
+by_col()
+{
   STORCH_CTX ctx = STORCH_CTX_New();
 
-  GraphNode* x = G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1.0, 2.0, 3.0, 4.0, -5.0, -6.0));
+  GraphNode* x =
+    G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1.0, 2.0, 3.0, 4.0, -5.0, -6.0));
 
   GraphNode* g = G_SumReduce1(ctx, x);
 
@@ -47,7 +50,7 @@ by_col() {
 
   int retval = 0;
 
-  for (int i=0; i<6; i++)
+  for (int i = 0; i < 6; i++)
     retval += check_almost_eq(grad(x)->data[i], 1.0);
 
   STORCH_CTX_Destroy(ctx);

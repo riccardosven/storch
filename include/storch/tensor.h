@@ -50,7 +50,7 @@ T_nelems(const Tensor* const t);
  * @returns the number of rows
  */
 size_t
-T_nrows(const Tensor * const t);
+T_nrows(const Tensor* const t);
 
 /**
  * Find the width of the tensor
@@ -60,7 +60,7 @@ T_nrows(const Tensor * const t);
  * @returns the number of columns
  */
 size_t
-T_ncols(const Tensor * const t);
+T_ncols(const Tensor* const t);
 
 /**
  * Create a new tensor.

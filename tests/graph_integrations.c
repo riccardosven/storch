@@ -128,8 +128,10 @@ integration_4(void)
   GraphNode* x = G_Parameter(ctx, T_Wrap(ctx, 2, 3, x_v));
   GraphNode* bias = G_Value(ctx, T_Wrap(ctx, 2, 3, b_v));
   */
-  GraphNode* x = G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0));
-  GraphNode* bias = G_Value(ctx, T_Build(ctx, 2, 3, 6, 0.5, 0.7, 1.1, -0.2, -0.7, 4.4));
+  GraphNode* x =
+    G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0));
+  GraphNode* bias =
+    G_Value(ctx, T_Build(ctx, 2, 3, 6, 0.5, 0.7, 1.1, -0.2, -0.7, 4.4));
 
   GraphNode* g = G_SumReduce1(
     ctx, G_Pow(ctx, G_Sum(ctx, x, bias), G_Value(ctx, T_Full(ctx, 2, 3, 2.0))));
@@ -158,40 +160,39 @@ integration_4(void)
 int
 integration_5(void)
 {
-    /* g = [x 0] ( [x y] ** [a ; b] ) [y ; y] */
-    /* g = x**(a + 1) y + x  y **(a+1) */
+  /* g = [x 0] ( [x y] ** [a ; b] ) [y ; y] */
+  /* g = x**(a + 1) y + x  y **(a+1) */
 
-    STORCH_CTX ctx = STORCH_CTX_New();
+  STORCH_CTX ctx = STORCH_CTX_New();
 
-    T_eltype x = 0.13;
-    T_eltype y = 0.52;
-    T_eltype a = 1.2;
-    T_eltype b = 0.99;
+  T_eltype x = 0.13;
+  T_eltype y = 0.52;
+  T_eltype a = 1.2;
+  T_eltype b = 0.99;
 
-    GraphNode *g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, 0.0));
-    GraphNode *g2 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, y));
-    GraphNode *g3 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, a, b));
-    GraphNode *g4 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, y, y));
+  GraphNode* g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, 0.0));
+  GraphNode* g2 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, y));
+  GraphNode* g3 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, a, b));
+  GraphNode* g4 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, y, y));
 
-    GraphNode *f = G_MatMul(ctx, G_MatMul(ctx, g1, G_Pow(ctx, g2, g3)), g4);
+  GraphNode* f = G_MatMul(ctx, G_MatMul(ctx, g1, G_Pow(ctx, g2, g3)), g4);
 
-    forward(f);
-    backward(f);
+  forward(f);
+  backward(f);
 
-    int retval = check_almost_eq(value(f)->data[0], -0.03668616);
+  int retval = check_almost_eq(value(f)->data[0], -0.03668616);
 
-    STORCH_CTX_Destroy(ctx);
+  STORCH_CTX_Destroy(ctx);
 
-    if (retval)
-      printf("Error in integration_5");
+  if (retval)
+    printf("Error in integration_5");
 
-    return retval;
-
+  return retval;
 }
-
 
 int
 main(void)
 {
-  return integration_1() + integration_2() + integration_3() + integration_4() + integration_5();
+  return integration_1() + integration_2() + integration_3() + integration_4() +
+         integration_5();
 }
