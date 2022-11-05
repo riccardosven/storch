@@ -509,7 +509,7 @@ T_SumReduce0_(Tensor * restrict const t, const Tensor* restrict const a)
   for (size_t j= 0; j < t->m; j ++) {
     t->data[j] = 0;
     for (size_t i=0; i < a->n; i++) {
-      t->data[i] += a->data[i + a->n * j];
+      t->data[j] += a->data[i + a->n * j];
     }
   }
 }
