@@ -122,7 +122,7 @@ integration_4(void)
   GraphNode* x = G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1, 1, 2, 2, 3, 3));
   GraphNode* bias = G_Value(ctx, T_Build(ctx, 2, 3, 6, 0.5, 0.7, 1.1, -0.2, -0.7, 4.4));
 
-  GraphNode* g = G_SumReduce(
+  GraphNode* g = G_SumReduce1(
     ctx, G_Pow(ctx, G_Sum(ctx, x, bias), G_Value(ctx, T_Full(ctx, 2, 3, 2.0))));
 
   forward(g);
