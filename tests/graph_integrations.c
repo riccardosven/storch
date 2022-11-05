@@ -152,8 +152,7 @@ integration_4(void)
 int
 integration_5(void)
 {
-  /* g = [x 0] ( [x y] ** [a ; b] ) [y ; y] */
-  /* g = x**(a + 1) y + x  y **(a+1) */
+  /* g = [x 1] ( [x y] ** [a ; b] ) [y ; y] */
 
   STORCH_CTX ctx = STORCH_CTX_New();
 
@@ -162,7 +161,7 @@ integration_5(void)
   T_eltype a = 1.2;
   T_eltype b = 0.99;
 
-  GraphNode* g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, 0.0));
+  GraphNode* g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, 1.0));
   GraphNode* g2 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, y));
   GraphNode* g3 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, a, b));
   GraphNode* g4 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, y, y));
@@ -172,13 +171,13 @@ integration_5(void)
   forward(f);
   backward(f);
 
-  int retval = check_almost_eq(value(f)->data[0], 0.03668616);
+  int retval = check_almost_eq(value(f)->data[0], 0.37785348296165466);
 
-  retval += check_almost_eq(grad(g2)->data[0], 0.05394069850444794);
-  retval += check_almost_eq(grad(g2)->data[1], 0.07117518782615662);
+  retval += check_almost_eq(grad(g2)->data[0], 0.5793516635894775);
+  retval += check_almost_eq(grad(g2)->data[1], 0.5893526077270508);
 
   retval += check_almost_eq(grad(g3)->data[0], -0.032090961933135986);
-  retval += check_almost_eq(grad(g3)->data[1], 0.0);
+  retval += check_almost_eq(grad(g3)->data[1], -0.31874343752861023);
 
   STORCH_CTX_Destroy(ctx);
 
