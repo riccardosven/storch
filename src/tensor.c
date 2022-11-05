@@ -103,6 +103,18 @@ T_nelems(const Tensor* const t)
   return t->n * t->m;
 }
 
+size_t
+T_nrows(const Tensor* const t)
+{
+  return t->n;
+}
+
+size_t
+T_ncols(const Tensor* const t)
+{
+  return t->m;
+}
+
 bool
 isscalar(const Tensor* const t)
 {

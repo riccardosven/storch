@@ -134,36 +134,56 @@ G_Pow_Forward(GraphNode* x)
 void
 G_Pow_Backward(GraphNode* x)
 {
+
   assert(x->op == POWER);
   assert(x->arity == 2);
 
-  Tensor *a = value(x->operands[0]);
-  Tensor *b = value(x->operands[1]);
+  Tensor* a = value(x->operands[0]);
+  Tensor* b = value(x->operands[1]);
 
-  Tensor* da =
-      T_Mul(NULL,
-          b,
-          T_Div(NULL, value(x), a)
-        );
+  // x->operands[0]->g += x->g @ ( b * (value(x) / a) )
+  Tensor* g = T_Div(NULL, value(x), a);
+  T_Mul_(g, b, g);
+  T_Mul_(g, grad(x), g);
 
-  printf("-------------\n");
-  print(a);
-  printf("-------------\n");
-  print(da);
-  printf("-------------\n");
+  Tensor* g0 = NULL;
 
+  if (T_nrows(value(x->operands[0])) == 1) {
+    g0 = T_SumReduce0(NULL, g);
+  } else if (T_ncols(value(x->operands[0])) == 1) {
+    g0 = T_SumReduce1(NULL, g0);
+  }
 
- //  T_Copy_(a, da);
- //  T_Add_(grad(x->operands[0]), da);
+  if (g0) {
+    T_Add_(grad(x->operands[0]), g0);
+    T_Destroy(g0);
+  } else {
+    T_Add_(grad(x->operands[0]), g);
+  }
+
+  T_Destroy(g);
 
   // x->operands[1]->g += x->g * value(x) * log(t0);
-  // Tensor* c = T_Log(NULL, value(x->operands[0]));
-  // T_Mul_(c, value(x), c);
-  // T_Mul_(c, grad(x), c);
-  // T_Add_(grad(x->operands[1]), c);
+  Tensor* c = T_Log(NULL, value(x->operands[0]));
+  T_Mul_(c, value(x), c);
+  T_Mul_(c, grad(x), c);
 
-  T_Destroy(da);
-  // T_Destroy(c);
+  Tensor* c0 = NULL;
+
+  if (T_nrows(grad(x->operands[1])) == 1) {
+    c0 = T_SumReduce0(NULL, c);
+  } else if (T_ncols(value(x->operands[1])) == 1) {
+    c0 = T_SumReduce1(NULL, c);
+  }
+
+  if (c0) {
+    T_Add_(grad(x->operands[1]), c0);
+    T_Destroy(c0);
+  } else {
+    T_Add_(grad(x->operands[1]), c);
+  }
+
+  T_Destroy(c);
 }
 
 void
@@ -257,7 +277,6 @@ G_SumReduce0_Backward(GraphNode* x)
 
   T_Sum_(grad(x->operands[0]), grad(x->operands[0]), grad(x));
 }
-
 
 void
 G_SumReduce1_Forward(GraphNode* x)

@@ -39,6 +39,9 @@ integration_1(void)
                             2 * x_v * y_v + 15 * y_v - 3 / pow(x_v, 2));
   STORCH_CTX_Destroy(ctx);
 
+  if (retval)
+    printf("Error in integration_1");
+
   return retval;
 }
 
@@ -68,6 +71,9 @@ integration_2(void)
   retval += check_almost_eq(grad(x)->data[0], sigma * (1 - sigma));
 
   STORCH_CTX_Destroy(ctx);
+
+  if (retval)
+    printf("Error in integration_2");
 
   return retval;
 }
@@ -99,6 +105,9 @@ integration_3(void)
 
   STORCH_CTX_Destroy(ctx);
 
+  if (retval)
+    printf("Error in integration_3");
+
   return retval;
 }
 
@@ -119,7 +128,7 @@ integration_4(void)
   GraphNode* x = G_Parameter(ctx, T_Wrap(ctx, 2, 3, x_v));
   GraphNode* bias = G_Value(ctx, T_Wrap(ctx, 2, 3, b_v));
   */
-  GraphNode* x = G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1, 1, 2, 2, 3, 3));
+  GraphNode* x = G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0));
   GraphNode* bias = G_Value(ctx, T_Build(ctx, 2, 3, 6, 0.5, 0.7, 1.1, -0.2, -0.7, 4.4));
 
   GraphNode* g = G_SumReduce1(
@@ -127,10 +136,6 @@ integration_4(void)
 
   forward(g);
   backward(g);
-
-  print(value(x));
-  printf("grad\n");
-  print(grad(x));
 
   int retval = check_almost_eq(value(g)->data[0], 17.15) +
                check_almost_eq(value(g)->data[1], 60.89);
@@ -144,6 +149,9 @@ integration_4(void)
 
   STORCH_CTX_Destroy(ctx);
 
+  if (retval)
+    printf("Error in integration_4");
+
   return retval;
 }
 
@@ -156,30 +164,28 @@ integration_5(void)
     STORCH_CTX ctx = STORCH_CTX_New();
 
     T_eltype x = 0.13;
-    T_eltype y = -0.52;
+    T_eltype y = 0.52;
     T_eltype a = 1.2;
     T_eltype b = 0.99;
 
-    /*
     GraphNode *g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, 0.0));
     GraphNode *g2 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, y));
     GraphNode *g3 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, a, b));
     GraphNode *g4 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, y, y));
 
     GraphNode *f = G_MatMul(ctx, G_MatMul(ctx, g1, G_Pow(ctx, g2, g3)), g4);
-    */
 
-    GraphNode *g1 = G_Parameter(ctx, T_Build(ctx, 1, 2, 2, x, 0.0));
-    GraphNode *g4 = G_Parameter(ctx, T_Build(ctx, 2, 1, 2, y, y));
-
-    GraphNode *f = G_MatMul(ctx, g1, g4);
     forward(f);
+    backward(f);
 
-    print(value(f));
+    int retval = check_almost_eq(value(f)->data[0], -0.03668616);
 
     STORCH_CTX_Destroy(ctx);
 
-    return 1;
+    if (retval)
+      printf("Error in integration_5");
+
+    return retval;
 
 }
 

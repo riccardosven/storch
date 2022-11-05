@@ -43,6 +43,26 @@ size_t
 T_nelems(const Tensor* const t);
 
 /**
+ * Find the height of the tensor
+ *
+ * @param[in] t input tensor.
+ *
+ * @returns the number of rows
+ */
+size_t
+T_nrows(const Tensor * const t);
+
+/**
+ * Find the width of the tensor
+ *
+ * @param[in] t input tensor.
+ *
+ * @returns the number of columns
+ */
+size_t
+T_ncols(const Tensor * const t);
+
+/**
  * Create a new tensor.
  *
  * @param[in] ctx Optional Storch context.

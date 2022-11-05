@@ -195,7 +195,6 @@ G_SumReduce1(STORCH_CTX ctx, GraphNode* const x)
   return v;
 }
 
-
 /*
 GraphNode*
 G_MeanReduce(STORCH_CTX, GraphNode* const x, )
