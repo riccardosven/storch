@@ -6,11 +6,9 @@
 int
 test_matrix_matrix()
 {
-  T_eltype a_v[] = { 1, 2, 3, 4, -5, 6 };
-  T_eltype b_v[] = { 3, -2, 1, 2, 9, 1 };
 
-  Tensor* a = T_Wrap(NULL, 2, 3, a_v);
-  Tensor* b = T_Wrap(NULL, 2, 3, b_v);
+  Tensor* a = T_Build(NULL, 2, 3, 6, 1.0, 2.0, 3.0, 4.0, -5.0, 6.0);
+  Tensor* b = T_Build(NULL, 2, 3, 6, 3.0, -2.0, 1.0, 2.0, 9.0, 1.0);
 
   Tensor* s = T_Div(NULL, a, b);
 
@@ -25,6 +23,9 @@ test_matrix_matrix()
   T_Destroy(b);
   T_Destroy(s);
 
+  if (retval)
+    printf("FAILED -> test_matrix_matrix\n");
+
   return retval;
 }
 
@@ -34,16 +35,14 @@ test_matrix_row()
   /* 1 3 -5
    * 2 4  6
    */
-  T_eltype a_v[] = { 1, 2, 3, 4, -5, 6 };
-  T_eltype b_v[] = { 3, -2, 1 };
 
-  Tensor* a = T_Wrap(NULL, 2, 3, a_v);
-  Tensor* b = T_Wrap(NULL, 1, 3, b_v);
+  Tensor* a = T_Build(NULL, 2, 3, 6, 1., 2., 3., 4., -5., 6.);
+  Tensor* b = T_Build(NULL, 1, 3, 3, 3., -2., -1.);
 
-  T_eltype e1[] = { 1.0 / 3.0, 2.0 / 3.0, -3.0 / 2.0, -2, -5, 6 };
-  T_eltype e2[] = {
-    3, 3.0 / 2.0, -2.0 / 3.0, -1.0 / 2.0, -1.0 / 5.0, 1.0 / 6.0
-  };
+  T_eltype e1[] = { 1.0 / 3.0,  2.0 / 3.0, -3.0 / 2.0,
+                    -4.0 / 2.0, 5.0 / 1.0, -6.0 / 1.0 };
+  T_eltype e2[] = { 3.0 / 1.0,  3.0 / 2.0, -2.0 / 3.0,
+                    -2.0 / 4.0, 1.0 / 5.0, -1.0 / 6.0 };
 
   Tensor* s1 = T_Div(NULL, a, b);
   Tensor* s2 = T_Div(NULL, b, a);
@@ -59,6 +58,9 @@ test_matrix_row()
   T_Destroy(s1);
   T_Destroy(s2);
 
+  if (retval)
+    printf("FAILED -> test_matrix_row\n");
+
   return retval;
 }
 
@@ -68,11 +70,9 @@ test_matrix_col()
   /* 1 3 -5
    * 2 4  6
    */
-  T_eltype a_v[] = { 1, 2, 3, 4, -5, 6 };
-  T_eltype b_v[] = { -2, 3 };
 
-  Tensor* a = T_Wrap(NULL, 2, 3, a_v);
-  Tensor* b = T_Wrap(NULL, 2, 1, b_v);
+  Tensor* a = T_Build(NULL, 2, 3, 6, 1., 2., 3., 4., -5., 6.);
+  Tensor* b = T_Build(NULL, 2, 1, 2, -2., 3.);
 
   Tensor* s1 = T_Div(NULL, a, b);
   Tensor* s2 = T_Div(NULL, b, a);
@@ -93,15 +93,17 @@ test_matrix_col()
   T_Destroy(s1);
   T_Destroy(s2);
 
+  if (retval)
+    printf("FAILED -> test_matrix_col\n");
+
   return retval;
 }
 
 int
 test_matrix_scalar()
 {
-  T_eltype a_v[] = { 1, 2, 3, 4, -5, 6 };
 
-  Tensor* a = T_Wrap(NULL, 2, 3, a_v);
+  Tensor* a = T_Build(NULL, 2, 3, 6, 1., 2., 3., 4., -5., 6.);
   Tensor* b = T_Scalar(NULL, 1.1);
 
   Tensor* s1 = T_Div(NULL, a, b);
@@ -115,7 +117,6 @@ test_matrix_scalar()
   int retval = 0;
 
   for (size_t i = 0; i < 6; i++) {
-    printf("%f, %f\n", s1->data[i], e1[i]);
     retval += check_almost_eq(s1->data[i], e1[i]);
     retval += check_almost_eq(s2->data[i], e2[i]);
   }
@@ -124,6 +125,9 @@ test_matrix_scalar()
   T_Destroy(b);
   T_Destroy(s1);
   T_Destroy(s2);
+
+  if (retval)
+    printf("FAILED -> test_matrix_scalar\n");
 
   return retval;
 }

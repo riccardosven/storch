@@ -19,7 +19,6 @@ find_package(Check REQUIRED)
 
 list(APPEND BLAS_LIBRARIES ${CBLAS_LIBRARIES})
 
-
 include_directories("include")
 
 add_subdirectory(src)

@@ -43,6 +43,26 @@ size_t
 T_nelems(const Tensor* const t);
 
 /**
+ * Find the height of the tensor
+ *
+ * @param[in] t input tensor.
+ *
+ * @returns the number of rows
+ */
+size_t
+T_nrows(const Tensor* const t);
+
+/**
+ * Find the width of the tensor
+ *
+ * @param[in] t input tensor.
+ *
+ * @returns the number of columns
+ */
+size_t
+T_ncols(const Tensor* const t);
+
+/**
  * Create a new tensor.
  *
  * @param[in] ctx Optional Storch context.
@@ -147,7 +167,7 @@ T_Wrap(STORCH_CTX ctx, size_t n, size_t m, T_eltype data[static n * m]);
  * @param[in] ctx Optional Storch context.
  * @param[in] n Number of rows.
  * @param[in] m Number of columns.
- * @param[in] N Number of initialization data.
+ * @param[in] N Number of initialization data (`N == n*m`).
  * @param[in] data data for initialization.
  *
  * @returns A pointer to the allocated tensor.
@@ -540,6 +560,29 @@ void
 T_MatMul_(Tensor* const t, const Tensor* const a, const Tensor* const b);
 
 /**
+ * Tensor crow reduction operation.
+ *
+ * @param[in] ctx Optional Storch context.
+ * @param[in] a Operand.
+ *
+ * @returns a pointer to a row tensor `t` where `t[j] = sum(a[i, j] for all
+ * i)`.
+ *
+ */
+Tensor*
+T_SumReduce0(STORCH_CTX ctx, const Tensor* const a);
+
+/**
+ * In-place tensor row reduction operation: `t[j] = sum(a[i, j] for all i)`.
+ *
+ * @param[out] t Output tensor.
+ * @param[in] a Operand tensor.
+ *
+ */
+void
+T_SumReduce0_(Tensor* restrict const t, const Tensor* restrict const a);
+
+/**
  * Tensor column reduction operation.
  *
  * @param[in] ctx Optional Storch context.
@@ -550,7 +593,7 @@ T_MatMul_(Tensor* const t, const Tensor* const a, const Tensor* const b);
  *
  */
 Tensor*
-T_SumReduce(STORCH_CTX ctx, const Tensor* const a);
+T_SumReduce1(STORCH_CTX ctx, const Tensor* const a);
 
 /**
  * In-place tensor column reduction operation: `t[i] = sum(a[i, j] for all j)`.
@@ -560,6 +603,6 @@ T_SumReduce(STORCH_CTX ctx, const Tensor* const a);
  *
  */
 void
-T_SumReduce_(Tensor* restrict const t, const Tensor* restrict const a);
+T_SumReduce1_(Tensor* restrict const t, const Tensor* restrict const a);
 
 #endif // STORCH_TENSOR_H

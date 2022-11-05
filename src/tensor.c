@@ -58,12 +58,24 @@ T_Broadcast_(T_eltype (*operation)(T_eltype, T_eltype),
       t->data[i] = operation(a->data[0], b->data[i]);
     }
   } else if ((a->m == 1) && (b->n == 1)) {
-    /* outer product */
-    for (size_t i=0; i < T_nelems(t); i++) {
-      t->data[i] = operation(a->data[ i % a->n], b->data[i / a->n]);
+    /* column-row */
+    for (size_t i = 0; i < T_nelems(t); i++) {
+      t->data[i] = operation(a->data[i % a->n], b->data[i / a->n]);
+    }
+  } else if ((a->n == 1) && (b->m == 1)) {
+    /* row-column */
+    for (size_t i = 0; i < T_nelems(t); i++) {
+      t->data[i] = operation(a->data[i / b->n], b->data[i % b->n]);
     }
   } else {
-  fprintf(stderr, "A: %ldx%ld B: %ldx%ld T: %ldx%ld\n", a->n, a->m, b->n, b->m,t->n, t->m);
+    fprintf(stderr,
+            "A: %ldx%ld B: %ldx%ld T: %ldx%ld\n",
+            a->n,
+            a->m,
+            b->n,
+            b->m,
+            t->n,
+            t->m);
     exit(1);
   }
 }
@@ -98,6 +110,18 @@ T_nelems(const Tensor* const t)
   return t->n * t->m;
 }
 
+size_t
+T_nrows(const Tensor* const t)
+{
+  return t->n;
+}
+
+size_t
+T_ncols(const Tensor* const t)
+{
+  return t->m;
+}
+
 bool
 isscalar(const Tensor* const t)
 {
@@ -119,7 +143,7 @@ Tensor*
 T_Build(STORCH_CTX ctx, size_t n, size_t m, size_t N, ...)
 {
 
-  assert(N == n*m);
+  assert(N == n * m);
 
   Tensor* t = T_New(ctx, n, m);
 
@@ -466,16 +490,16 @@ T_MatMul_(Tensor* const t, const Tensor* const a, const Tensor* const b)
 }
 
 Tensor*
-T_SumReduce(STORCH_CTX ctx, const Tensor* const a)
+T_SumReduce1(STORCH_CTX ctx, const Tensor* const a)
 {
   Tensor* t = T_New(ctx, a->n, 1);
-  T_SumReduce_(t, a);
+  T_SumReduce1_(t, a);
 
   return t;
 }
 
 void
-T_SumReduce_(Tensor* restrict const t, const Tensor* restrict const a)
+T_SumReduce1_(Tensor* restrict const t, const Tensor* restrict const a)
 {
   assert(t->n == a->n && t->m == 1);
 
@@ -483,6 +507,28 @@ T_SumReduce_(Tensor* restrict const t, const Tensor* restrict const a)
     t->data[i] = 0;
     for (size_t j = 0; j < a->m; j++) {
       t->data[i] += a->data[i + a->n * j];
+    }
+  }
+}
+
+Tensor*
+T_SumReduce0(STORCH_CTX ctx, const Tensor* const a)
+{
+  Tensor* t = T_New(ctx, 1, a->m);
+  T_SumReduce0_(t, a);
+
+  return t;
+}
+
+void
+T_SumReduce0_(Tensor* restrict const t, const Tensor* restrict const a)
+{
+  assert(t->n == 1 && t->m == a->m);
+
+  for (size_t j = 0; j < t->m; j++) {
+    t->data[j] = 0;
+    for (size_t i = 0; i < a->n; i++) {
+      t->data[j] += a->data[i + a->n * j];
     }
   }
 }

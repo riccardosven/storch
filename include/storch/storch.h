@@ -197,6 +197,18 @@ GraphNode*
 G_MatMul(STORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
 
 /**
+ * Compute the row-wise unary reduction of a graphnode.
+ *
+ * @param[in] ctx Storch context to manage the graph.
+ * @param[in] x Operand.
+ *
+ * @returns A `GraphNode` representing `sum(x[i, :] for all i)`.
+ *
+ */
+GraphNode*
+G_SumReduce0(STORCH_CTX ctx, GraphNode* const x);
+
+/**
  * Compute the column-wise unary reduction of a graphnode.
  *
  * @param[in] ctx Storch context to manage the graph.
@@ -206,7 +218,7 @@ G_MatMul(STORCH_CTX ctx, GraphNode* const x, GraphNode* const y);
  *
  */
 GraphNode*
-G_SumReduce(STORCH_CTX ctx, GraphNode* const x);
+G_SumReduce1(STORCH_CTX ctx, GraphNode* const x);
 
 /** @} */
 

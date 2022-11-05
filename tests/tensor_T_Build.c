@@ -18,6 +18,9 @@ main(void)
     retval += check_almost_eq(t->data[i], e[i]);
   }
 
+  retval += t->n != 3;
+  retval += t->m != 2;
+
   T_Destroy(t);
 
   return retval ? EXIT_FAILURE : EXIT_SUCCESS;

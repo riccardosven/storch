@@ -172,13 +172,25 @@ G_MatMul(STORCH_CTX ctx, GraphNode* const x, GraphNode* const y)
 }
 
 GraphNode*
-G_SumReduce(STORCH_CTX ctx, GraphNode* const x)
+G_SumReduce0(STORCH_CTX ctx, GraphNode* const x)
 {
-  GraphNode* v = G_New(ctx, SUMREDUCE, 1);
+  GraphNode* v = G_New(ctx, SUMREDUCE_ROW, 1);
   v->operands[0] = x;
 
-  v->forward_f = G_SumReduce_Forward;
-  v->backward_f = G_SumReduce_Backward;
+  v->forward_f = G_SumReduce0_Forward;
+  v->backward_f = G_SumReduce0_Backward;
+
+  return v;
+}
+
+GraphNode*
+G_SumReduce1(STORCH_CTX ctx, GraphNode* const x)
+{
+  GraphNode* v = G_New(ctx, SUMREDUCE_COL, 1);
+  v->operands[0] = x;
+
+  v->forward_f = G_SumReduce1_Forward;
+  v->backward_f = G_SumReduce1_Backward;
 
   return v;
 }

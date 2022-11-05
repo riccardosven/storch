@@ -17,7 +17,8 @@ typedef enum
   PRODUCT,
   SUM,
   VALUE,
-  SUMREDUCE,
+  SUMREDUCE_COL,
+  SUMREDUCE_ROW,
   MEANREDUCE,
   N_OPS,
 } Op;
@@ -77,9 +78,15 @@ void
 G_Sum_Backward(GraphNode* x);
 
 void
-G_SumReduce_Forward(GraphNode* x);
+G_SumReduce0_Forward(GraphNode* x);
 
 void
-G_SumReduce_Backward(GraphNode* x);
+G_SumReduce0_Backward(GraphNode* x);
+
+void
+G_SumReduce1_Forward(GraphNode* x);
+
+void
+G_SumReduce1_Backward(GraphNode* x);
 
 #endif // STORCH_OPS_H
