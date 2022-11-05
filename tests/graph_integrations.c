@@ -120,14 +120,6 @@ integration_4(void)
    * 0.7 -0.2  4.4
    */
 
-  /*
-  T_eltype b_v[] = { 1, 1, 2, 2, 3, 3 };
-
-  T_eltype x_v[] = { 0.5, 0.7, 1.1, -0.2, -0.7, 4.4 };
-
-  GraphNode* x = G_Parameter(ctx, T_Wrap(ctx, 2, 3, x_v));
-  GraphNode* bias = G_Value(ctx, T_Wrap(ctx, 2, 3, b_v));
-  */
   GraphNode* x =
     G_Parameter(ctx, T_Build(ctx, 2, 3, 6, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0));
   GraphNode* bias =
@@ -180,7 +172,13 @@ integration_5(void)
   forward(f);
   backward(f);
 
-  int retval = check_almost_eq(value(f)->data[0], -0.03668616);
+  int retval = check_almost_eq(value(f)->data[0], 0.03668616);
+
+  retval += check_almost_eq(grad(g2)->data[0], 0.05394069850444794);
+  retval += check_almost_eq(grad(g2)->data[1], 0.07117518782615662);
+
+  retval += check_almost_eq(grad(g3)->data[0], -0.032090961933135986);
+  retval += check_almost_eq(grad(g3)->data[1], 0.0);
 
   STORCH_CTX_Destroy(ctx);
 

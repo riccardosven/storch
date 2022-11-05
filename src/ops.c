@@ -151,7 +151,7 @@ G_Pow_Backward(GraphNode* x)
   if (T_nrows(value(x->operands[0])) == 1) {
     g0 = T_SumReduce0(NULL, g);
   } else if (T_ncols(value(x->operands[0])) == 1) {
-    g0 = T_SumReduce1(NULL, g0);
+    g0 = T_SumReduce1(NULL, g);
   }
 
   if (g0) {
@@ -164,8 +164,8 @@ G_Pow_Backward(GraphNode* x)
   T_Destroy(g);
 
   // x->operands[1]->g += x->g * value(x) * log(t0);
-  Tensor* c = T_Log(NULL, value(x->operands[0]));
-  T_Mul_(c, value(x), c);
+  Tensor* d = T_Log(NULL, value(x->operands[0]));
+  Tensor* c = T_Mul(NULL, value(x), d);
   T_Mul_(c, grad(x), c);
 
   Tensor* c0 = NULL;
