@@ -255,6 +255,13 @@ T_SetItem(Tensor* const t, size_t i, size_t j, T_eltype d)
   t->data[i + t->n * j] = d;
 }
 
+T_eltype*
+T_ItemPtr(const Tensor* const t, size_t i, size_t j)
+{
+  assert (i< t->n && j < t->m);
+  return t->data + (i + t->n * j);
+}
+
 Tensor*
 T_Sum(STORCH_CTX ctx, const Tensor* const a, const Tensor* const b)
 {
