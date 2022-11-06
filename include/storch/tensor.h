@@ -245,9 +245,23 @@ T_Copy_(Tensor* const t, const Tensor* const a);
  * @param[in] i Row of the element.
  * @param[in] j Column of the element.
  *
+ * @returns A copy of the element.
  */
 T_eltype
 T_GetItem(const Tensor* const t, size_t i, size_t j);
+
+/**
+ * Get a pointer to the `i,j`th element of the tensor.
+ *
+ * @param[in] t Tensor.
+ * @param[in] i Row of the element.
+ * @param[in] j Column of the element.
+ *
+ * @returns A pointer to the element.
+ */
+T_eltype*
+T_ItemPtr(const Tensor* const t, size_t i, size_t j);
+
 
 /**
  * Set the value of the `i,j`th element of the tensor.
